@@ -200,16 +200,26 @@ function registerKeyHotkey(accelerator) {
   saveSettings();
 }
 
+function resolveIcon() {
+  const isWin = process.platform === 'win32';
+  const isMac = process.platform === 'darwin';
+  const file = isMac ? 'AutoMancer.icns' : isWin ? 'AutoMancer.ico' : 'AutoMancer.png';
+  const locations = [
+    path.join(__dirname, 'images', file),
+    path.join(app.getAppPath(), 'images', file),
+    path.join(process.resourcesPath, 'images', file)
+  ];
+  for (const p of locations) {
+    const img = nativeImage.createFromPath(p);
+    if (!img.isEmpty()) return img;
+  }
+  return nativeImage.createEmpty();
+}
+
 function createWindow() {
   const isWin = process.platform === 'win32';
   const isMac = process.platform === 'darwin';
-  const basePath = app.isPackaged ? process.resourcesPath : app.getAppPath();
-  const iconPath = path.join(
-    basePath,
-    'images',
-    isMac ? 'AutoMancer.icns' : isWin ? 'AutoMancer.ico' : 'AutoMancer.png'
-  );
-  const icon = nativeImage.createFromPath(iconPath);
+  const icon = resolveIcon();
   if (isMac && !icon.isEmpty()) {
     try {
       app.dock.setIcon(icon);

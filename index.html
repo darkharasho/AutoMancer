@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <title>AutoMancer</title>
-    <link rel="icon" type="image/png" href="images/AutoMancer.png" />
+  <link rel="icon" type="image/png" href="images/AutoMancer.png" />
+  <link rel="icon" type="image/x-icon" href="images/AutoMancer.icns" />
   <style>
     :root {
       color-scheme: dark;
@@ -154,21 +155,33 @@
       width: var(--field-width);
     }
     button {
+      position: relative;
       flex: 0 0 auto;
       background: rgba(255, 255, 255, 0.07);
-      border: 1px solid var(--border);
+      border: none;
       border-radius: 6px;
       padding: 6px 12px;
       color: #fff;
       cursor: pointer;
       transition: background 0.2s;
     }
+    button::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 2px;
+      background: linear-gradient(135deg, #D33818, #8B5CF6);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+              mask-composite: exclude;
+      pointer-events: none;
+    }
     button:hover {
       background: var(--hover);
     }
     button.running {
       background: #7f1d1d;
-      border-color: #dc2626;
     }
     button.running:hover {
       background: #991b1b;
@@ -214,6 +227,10 @@
           <option value="right">right</option>
         </select>
       </label>
+      <label>
+        Toggle Hotkey
+        <button id="clickHotkeyBtn" class="hotkey-btn">F6</button>
+      </label>
       <label>Target</label>
       <select id="clickTarget">
         <option value="current">Current location</option>
@@ -224,10 +241,6 @@
         <input id="coordY" type="number" value="0" placeholder="Y" />
         <button id="pickCoord" class="icon-btn" title="Pick location">⌖</button>
       </div>
-      <label>
-        Toggle Hotkey
-        <button id="clickHotkeyBtn" class="hotkey-btn">F6</button>
-      </label>
       <div class="actions">
         <button id="toggleClicker">Start</button>
       </div>
