@@ -242,11 +242,11 @@ function createWindow() {
     if (isWin) {
       win.setDarkTheme();
       win.setMicaEffect();
-      if (typeof win.setRoundedCorners === 'function') {
-        win.setRoundedCorners(true);
-      }
     }
     win.show();
+    if (isWin && typeof win.setRoundedCorners === 'function') {
+      win.setRoundedCorners(true);
+    }
   });
   win.on('closed', () => {
     win = null;

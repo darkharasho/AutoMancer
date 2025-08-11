@@ -23,6 +23,10 @@
       user-select: none;
     }
 
+    html, body {
+      height: 100%;
+    }
+
       html.win32, body.win32 {
         border-radius: 12px;
         overflow: hidden;
@@ -50,8 +54,7 @@
     .card {
       background: var(--bg);
       backdrop-filter: blur(20px);
-      border: 2px solid transparent;
-      border-image: linear-gradient(to bottom right, #D33818, #8c5cf3) 1;
+      border: 1px solid var(--border);
       border-radius: 16px;
       padding: 16px;
       display: flex;
@@ -159,9 +162,7 @@
     }
     .actions button {
       width: var(--field-width);
-      border: 2px solid transparent;
-      border-image: linear-gradient(to bottom right, #D33818, #8c5cf3) 1;
-      border-radius:  12px !important;
+      border-radius: 12px !important;
     }
     button {
       flex: 0 0 auto;
