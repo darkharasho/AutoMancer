@@ -330,12 +330,12 @@ app.on('will-quit', () => {
     }
   });
 
-  ipcMain.on('suspend-hotkeys', () => {
+  ipcMain.handle('suspend-hotkeys', () => {
     globalShortcut.unregister(clickHotkey);
     globalShortcut.unregister(keyHotkey);
   });
 
-  ipcMain.on('resume-hotkeys', () => {
+  ipcMain.handle('resume-hotkeys', () => {
     registerClickHotkey(clickHotkey);
     registerKeyHotkey(keyHotkey);
   });

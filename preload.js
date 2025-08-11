@@ -23,6 +23,6 @@ contextBridge.exposeInMainWorld('auto', {
     pickPoint: () => ipcRenderer.invoke('pick-point'),
     resize: (height) => ipcRenderer.send('resize-window', height),
     updateClickConfig: (config) => ipcRenderer.send('update-click-config', config),
-    suspendHotkeys: () => ipcRenderer.send('suspend-hotkeys'),
-    resumeHotkeys: () => ipcRenderer.send('resume-hotkeys')
+    suspendHotkeys: () => ipcRenderer.invoke('suspend-hotkeys'),
+    resumeHotkeys: () => ipcRenderer.invoke('resume-hotkeys')
   });

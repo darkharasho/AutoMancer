@@ -121,8 +121,8 @@ function toAccelerator(e) {
   return parts.join('+');
 }
 
-function captureHotkey(button, setter) {
-  window.auto.suspendHotkeys();
+async function captureHotkey(button, setter) {
+  await window.auto.suspendHotkeys();
   const overlay = document.createElement('div');
   overlay.className = 'modal';
   overlay.innerHTML = '<div class="modal-content"><p>Press a key combination</p><button class="close-btn start-btn">Close</button></div>';
@@ -150,11 +150,11 @@ function captureHotkey(button, setter) {
     cleanup();
   }
 
-  function cleanup() {
+  async function cleanup() {
     window.removeEventListener('keydown', handler, true);
     overlay.remove();
     document.body.classList.remove('modal-open');
-    window.auto.resumeHotkeys();
+    await window.auto.resumeHotkeys();
   }
 
   window.addEventListener('keydown', handler, true);
