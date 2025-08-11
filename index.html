@@ -39,13 +39,14 @@
       display: grid;
       gap: 16px;
       grid-template-columns: repeat(2, 1fr);
-      align-items: start;
+      align-items: stretch;
       box-sizing: border-box;
     }
     .card {
       background: var(--bg);
       backdrop-filter: blur(20px);
-      border: 1px solid var(--border);
+      border: 2px solid transparent;
+      border-image: linear-gradient(to bottom right, #D33818, #8c5cf3) 1;
       border-radius: 12px;
       padding: 16px;
       display: flex;
@@ -63,7 +64,8 @@
     }
 
     .icon {
-      font-size: 1.2em;
+      width: 1.2em;
+      height: 1.2em;
     }
     label {
       display: flex;
@@ -152,6 +154,8 @@
     }
     .actions button {
       width: var(--field-width);
+      border: 2px solid transparent;
+      border-image: linear-gradient(to bottom right, #D33818, #8c5cf3) 1;
     }
     button {
       flex: 0 0 auto;
@@ -201,7 +205,7 @@
   <header><img src="images/AutoMancer.png" alt="AutoMancer logo" />AutoMancer</header>
   <main>
     <section class="card">
-      <h2><span class="icon">🖱️</span>Auto Clicker</h2>
+      <h2><img src="images/cursor.png" alt="" class="icon" />Auto Clicker</h2>
       <label>
         Interval (ms)
         <input id="clickInterval" type="number" value="100" min="1" />
@@ -214,6 +218,10 @@
           <option value="right">right</option>
         </select>
       </label>
+      <label>
+        Toggle Hotkey
+        <button id="clickHotkeyBtn" class="hotkey-btn">F6</button>
+      </label>
       <label>Target</label>
       <select id="clickTarget">
         <option value="current">Current location</option>
@@ -224,16 +232,12 @@
         <input id="coordY" type="number" value="0" placeholder="Y" />
         <button id="pickCoord" class="icon-btn" title="Pick location">⌖</button>
       </div>
-      <label>
-        Toggle Hotkey
-        <button id="clickHotkeyBtn" class="hotkey-btn">F6</button>
-      </label>
       <div class="actions">
         <button id="toggleClicker">Start</button>
       </div>
     </section>
     <section class="card">
-      <h2><span class="icon">⌨️</span>Auto Key Presser</h2>
+      <h2><img src="images/keyboard.png" alt="" class="icon" />Auto Key Presser</h2>
       <label>
         Key
         <select id="key"></select>
