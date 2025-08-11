@@ -14,7 +14,7 @@ function startClicker(interval) {
   clickInterval = interval || clickInterval;
   clickIntervalId = setInterval(() => {
     if (!robot) {
-      robot = require('robotjs');
+      robot = require('@jitsi/robotjs');
     }
     const mouse = robot.getMousePos();
     robot.mouseClick();
@@ -35,7 +35,7 @@ function startKeyPresser(key, interval) {
   keyInterval = interval || keyInterval;
   keyIntervalId = setInterval(() => {
     if (!robot) {
-      robot = require('robotjs');
+      robot = require('@jitsi/robotjs');
     }
     robot.keyTap(currentKey);
   }, keyInterval);
