@@ -19,6 +19,10 @@ It showcases Windows 11 style using Mica effects and provides global hotkeys to 
    ```bash
    npm start
    ```
+3. Package the app (Windows 64-bit example)
+   ```bash
+   npm run package
+   ```
 
 ## Notes
 
