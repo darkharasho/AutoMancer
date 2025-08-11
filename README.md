@@ -4,9 +4,12 @@
 
 # AutoMancer
 
-AutoMancer is a basic Electron app that automates mouse clicks and keyboard presses.
-It showcases Windows 11 style using Mica effects and provides global hotkeys to toggle automation.
-Automation is powered by the `@jitsi/robotjs` library, which ships prebuilt binaries so it installs without Visual Studio or other build tools.
+AutoMancer is a basic Windows & MacOS app that automates mouse clicks and keyboard presses.
+It showcases a modern design on each platform and provides global hotkeys to toggle automation.
+
+<p align="center">
+    <img width="752" height="472" alt="image" src="https://github.com/user-attachments/assets/4b514dbc-057d-4fc0-b03d-d36271b8c6b6" />
+</p>
 
 ## Features
 
