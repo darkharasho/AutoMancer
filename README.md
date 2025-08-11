@@ -34,6 +34,7 @@ If you manage versions with `nvm`, the project ships an `.nvmrc` file; run `nvm 
 
 - Hotkeys toggle the automation globally and can be changed via set-hotkey popups.
 - Intervals (default 100ms) and keys can be adjusted in the UI.
+- Toggle buttons turn green while their automation is running.
 - Set `AUTOMANCER_DISABLE_GPU=1` before launching if you need to disable hardware acceleration.
 - On macOS the window uses vibrancy instead of Mica and the title is offset to avoid overlapping system controls.
 

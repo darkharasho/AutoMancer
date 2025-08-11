@@ -61,8 +61,9 @@
       margin-bottom: 8px;
       -webkit-app-region: no-drag;
     }
-    input, select {
-      flex: 1;
+    input[type="number"], select {
+      width: 100px;
+      flex: 0 0 100px;
       background: rgba(255, 255, 255, 0.07);
       border: 1px solid var(--border);
       border-radius: 6px;
@@ -96,7 +97,6 @@
     .actions {
       display: flex;
       align-items: center;
-      gap: 8px;
       margin-top: 8px;
       -webkit-app-region: no-drag;
     }
@@ -113,9 +113,12 @@
     button:hover {
       background: var(--hover);
     }
-    .status {
-      flex: 1;
-      font-weight: 500;
+    button.running {
+      background: #166534;
+      border-color: #16a34a;
+    }
+    button.running:hover {
+      background: #15803d;
     }
     .modal {
       position: fixed;
@@ -150,9 +153,7 @@
         <button id="clickHotkeyBtn" class="hotkey-btn">F6</button>
       </label>
       <div class="actions">
-        <button id="startClicker">Start</button>
-        <button id="stopClicker">Stop</button>
-        <span class="status" id="clickerStatus">Stopped</span>
+        <button id="toggleClicker">Start</button>
       </div>
     </section>
     <section class="card">
@@ -170,9 +171,7 @@
         <button id="keyHotkeyBtn" class="hotkey-btn">F7</button>
       </label>
     <div class="actions">
-      <button id="startKey">Start</button>
-      <button id="stopKey">Stop</button>
-      <span class="status" id="keyStatus">Stopped</span>
+      <button id="toggleKey">Start</button>
     </div>
     </section>
   </main>

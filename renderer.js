@@ -17,31 +17,37 @@ keys.forEach(k => {
 });
 keySelect.value = 'a';
 
-document.getElementById('startClicker').addEventListener('click', () => {
-  const interval = parseInt(document.getElementById('clickInterval').value, 10);
-  window.auto.startClicker(interval);
+const toggleClickerBtn = document.getElementById('toggleClicker');
+toggleClickerBtn.addEventListener('click', () => {
+  const running = toggleClickerBtn.classList.contains('running');
+  if (running) {
+    window.auto.stopClicker();
+  } else {
+    const interval = parseInt(document.getElementById('clickInterval').value, 10);
+    window.auto.startClicker(interval);
+  }
 });
 
-document.getElementById('stopClicker').addEventListener('click', () => {
-  window.auto.stopClicker();
-});
-
-document.getElementById('startKey').addEventListener('click', () => {
-  const key = document.getElementById('key').value;
-  const interval = parseInt(document.getElementById('keyInterval').value, 10);
-  window.auto.startKeyPresser(key, interval);
-});
-
-document.getElementById('stopKey').addEventListener('click', () => {
-  window.auto.stopKeyPresser();
+const toggleKeyBtn = document.getElementById('toggleKey');
+toggleKeyBtn.addEventListener('click', () => {
+  const running = toggleKeyBtn.classList.contains('running');
+  if (running) {
+    window.auto.stopKeyPresser();
+  } else {
+    const key = document.getElementById('key').value;
+    const interval = parseInt(document.getElementById('keyInterval').value, 10);
+    window.auto.startKeyPresser(key, interval);
+  }
 });
 
 window.auto.onClickerToggled((state) => {
-  document.getElementById('clickerStatus').textContent = state ? 'Running' : 'Stopped';
+  toggleClickerBtn.textContent = state ? 'Stop' : 'Start';
+  toggleClickerBtn.classList.toggle('running', state);
 });
 
 window.auto.onKeyToggled((state) => {
-  document.getElementById('keyStatus').textContent = state ? 'Running' : 'Stopped';
+  toggleKeyBtn.textContent = state ? 'Stop' : 'Start';
+  toggleKeyBtn.classList.toggle('running', state);
 });
 
 function toAccelerator(e) {
