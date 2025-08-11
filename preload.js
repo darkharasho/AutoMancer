@@ -1,5 +1,7 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
+contextBridge.exposeInMainWorld('env', { platform: process.platform });
+
 contextBridge.exposeInMainWorld('auto', {
   startClicker: (interval) => ipcRenderer.send('start-clicker', interval),
   stopClicker: () => ipcRenderer.send('stop-clicker'),

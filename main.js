@@ -1,4 +1,4 @@
-const { app, ipcMain, globalShortcut } = require('electron');
+const { app, ipcMain, globalShortcut, BrowserWindow } = require('electron');
 const path = require('path');
 const { MicaBrowserWindow } = require('mica-electron');
 let robot;
@@ -114,7 +114,10 @@ function registerKeyHotkey(accelerator) {
 }
 
 function createWindow() {
-  win = new MicaBrowserWindow({
+  const isWin = process.platform === 'win32';
+  const isMac = process.platform === 'darwin';
+  const WindowClass = isWin ? MicaBrowserWindow : BrowserWindow;
+  win = new WindowClass({
     width: 640,
     height: 300,
     titleBarStyle: 'hidden',
@@ -122,6 +125,7 @@ function createWindow() {
     autoHideMenuBar: true,
     backgroundColor: '#01000000',
     show: false,
+    ...(isMac ? { vibrancy: 'under-window', visualEffectState: 'active' } : {}),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
@@ -131,8 +135,10 @@ function createWindow() {
 
   win.loadFile(path.join(__dirname, 'index.html'));
   win.once('ready-to-show', () => {
-    win.setDarkTheme();
-    win.setMicaEffect();
+    if (isWin) {
+      win.setDarkTheme();
+      win.setMicaEffect();
+    }
     win.show();
   });
 
