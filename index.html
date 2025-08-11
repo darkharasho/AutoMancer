@@ -23,10 +23,10 @@
       user-select: none;
     }
 
-    body.win32 {
-      border-radius: 12px;
-      overflow: hidden;
-    }
+      html.win32, body.win32 {
+        border-radius: 12px;
+        overflow: hidden;
+      }
     header {
       height: 32px;
       padding: 0 12px;
@@ -161,7 +161,7 @@
       width: var(--field-width);
       border: 2px solid transparent;
       border-image: linear-gradient(to bottom right, #D33818, #8c5cf3) 1;
-      border-radius: 12px;
+      border-radius:  12px !important;
     }
     button {
       flex: 0 0 auto;

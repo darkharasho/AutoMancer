@@ -3,6 +3,7 @@ const header = document.querySelector('header');
 const platform = window.env && window.env.platform;
 if (platform) {
   document.body.classList.add(platform);
+  document.documentElement.classList.add(platform);
 }
 if (platform === 'darwin') {
   header.style.justifyContent = 'flex-end';
