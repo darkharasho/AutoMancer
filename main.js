@@ -203,8 +203,9 @@ function registerKeyHotkey(accelerator) {
 function createWindow() {
   const isWin = process.platform === 'win32';
   const isMac = process.platform === 'darwin';
+  const basePath = app.isPackaged ? process.resourcesPath : __dirname;
   const iconPath = path.join(
-    __dirname,
+    basePath,
     'images',
     isMac ? 'AutoMancer.icns' : isWin ? 'AutoMancer.ico' : 'AutoMancer.png'
   );
