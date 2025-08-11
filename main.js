@@ -123,18 +123,22 @@ function toggleKeyPresser() {
 
 function pickPoint() {
   return new Promise((resolve) => {
+    const isMac = process.platform === 'darwin';
     const picker = new BrowserWindow({
-      fullscreen: true,
+      fullscreen: !isMac,
+      simpleFullscreen: isMac,
       transparent: true,
       frame: false,
       show: true,
       alwaysOnTop: true,
+      skipTaskbar: true,
+      backgroundColor: '#00000000',
       webPreferences: {
         nodeIntegration: true,
         contextIsolation: false
       }
     });
-    picker.loadURL(path.join('file://', __dirname, 'picker.html'));
+    picker.loadFile(path.join(__dirname, 'picker.html'));
 
     const finish = () => {
       const pos = screen.getCursorScreenPoint();

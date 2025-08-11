@@ -70,6 +70,11 @@
     }
     input, select, button {
       box-sizing: border-box;
+      text-align: center;
+    }
+
+    select {
+      text-align-last: center;
     }
 
     input[type="number"], select {
@@ -79,9 +84,6 @@
       border-radius: 6px;
       padding: 6px 8px;
       color: #fff;
-    }
-    input[type="number"] {
-      text-align: right;
     }
 
     .hotkey-btn {
@@ -106,6 +108,15 @@
     }
     input:focus, select:focus {
       outline: 2px solid var(--accent);
+    }
+
+    .wide-input {
+      width: 100%;
+    }
+
+    .coord-row {
+      display: flex;
+      gap: 8px;
     }
     .actions {
       display: flex;
@@ -173,22 +184,14 @@
           <option value="right">right</option>
         </select>
       </label>
-      <label>
-        Target
-        <select id="clickTarget">
-          <option value="current">Current location</option>
-          <option value="coords">Use coordinates</option>
-        </select>
-      </label>
-      <div id="coordFields" style="display:none; gap:8px; flex-direction:column;">
-        <label>
-          X
-          <input id="coordX" type="number" value="0" />
-        </label>
-        <label>
-          Y
-          <input id="coordY" type="number" value="0" />
-        </label>
+      <label for="clickTarget">Target</label>
+      <select id="clickTarget" class="wide-input">
+        <option value="current">Current location</option>
+        <option value="coords">Use coordinates</option>
+      </select>
+      <div id="coordFields" class="coord-row" style="display:none;">
+        <input id="coordX" type="number" value="0" placeholder="X" />
+        <input id="coordY" type="number" value="0" placeholder="Y" />
         <button id="pickCoord" class="hotkey-btn">Pick</button>
       </div>
       <label>
