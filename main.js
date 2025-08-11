@@ -2,6 +2,7 @@ const { app, ipcMain, globalShortcut } = require('electron');
 const path = require('path');
 const { MicaBrowserWindow } = require('mica-electron');
 let robot;
+let win;
 
 // Allow disabling GPU acceleration via environment variable if needed
 if (process.env.AUTOMANCER_DISABLE_GPU === '1') {
@@ -70,12 +71,13 @@ function toggleKeyPresser() {
 }
 
 function createWindow() {
-  const win = new MicaBrowserWindow({
+  win = new MicaBrowserWindow({
     width: 500,
     height: 400,
     frame: true,
     autoHideMenuBar: true,
     backgroundColor: '#00000000',
+    show: false,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
@@ -83,8 +85,11 @@ function createWindow() {
     }
   });
 
-  win.loadFile(path.join(__dirname, 'index.html')).then(() => {
+  win.loadFile(path.join(__dirname, 'index.html'));
+  win.once('ready-to-show', () => {
+    win.setDarkTheme();
     win.setMicaEffect();
+    win.show();
   });
 
   globalShortcut.register('F6', () => {
