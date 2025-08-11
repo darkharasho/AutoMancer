@@ -45,6 +45,15 @@
       font-weight: 600;
       font-size: 18px;
     }
+    h2 {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .icon {
+      font-size: 1.2em;
+    }
     label {
       display: flex;
       align-items: center;
@@ -115,10 +124,14 @@
   <header>AutoMancer</header>
   <main>
     <section class="card">
-      <h2>Auto Clicker</h2>
+      <h2><span class="icon">🖱️</span>Auto Clicker</h2>
       <label>
         Interval (ms)
-        <input id="clickInterval" type="number" value="1000" min="1" />
+        <input id="clickInterval" type="number" value="100" min="1" />
+      </label>
+      <label>
+        Toggle Hotkey
+        <input id="clickHotkey" type="text" value="F6" readonly />
       </label>
       <div class="actions">
         <button id="startClicker">Start</button>
@@ -127,14 +140,18 @@
       </div>
     </section>
     <section class="card">
-      <h2>Auto Key Presser</h2>
+      <h2><span class="icon">⌨️</span>Auto Key Presser</h2>
       <label>
         Key
         <select id="key"></select>
       </label>
       <label>
         Interval (ms)
-        <input id="keyInterval" type="number" value="1000" min="1" />
+        <input id="keyInterval" type="number" value="100" min="1" />
+      </label>
+      <label>
+        Toggle Hotkey
+        <input id="keyHotkey" type="text" value="F7" readonly />
       </label>
       <div class="actions">
         <button id="startKey">Start</button>
@@ -143,7 +160,7 @@
       </div>
     </section>
   </main>
-  <footer>Hotkeys: F6 toggles clicker, F7 toggles key presser.</footer>
+  <footer>Hotkeys are configurable in each section.</footer>
   <script src="renderer.js"></script>
 </body>
 </html>

@@ -9,7 +9,7 @@ Automation is powered by the `@jitsi/robotjs` library, which ships prebuilt bina
 - Configurable auto clicker and key presser
 - Automation via prebuilt `@jitsi/robotjs`
 - Windows 11 Mica effect via `mica-electron`
-- Global hotkeys (F6 for clicker, F7 for key presser)
+- User-configurable global hotkeys for clicker and key presser
 
 ## Getting Started
 
@@ -32,8 +32,8 @@ If you manage versions with `nvm`, the project ships an `.nvmrc` file; run `nvm 
 
 ## Notes
 
-- Hotkeys toggle the automation globally.
-- Intervals and keys can be adjusted in the UI.
+- Hotkeys toggle the automation globally and can be changed in the UI.
+- Intervals (default 100ms) and keys can be adjusted in the UI.
 - Set `AUTOMANCER_DISABLE_GPU=1` before launching if you need to disable hardware acceleration.
 
 ### Troubleshooting

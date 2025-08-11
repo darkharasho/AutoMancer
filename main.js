@@ -12,8 +12,11 @@ if (process.env.AUTOMANCER_DISABLE_GPU === '1') {
 let clickIntervalId = null;
 let keyIntervalId = null;
 let currentKey = 'a';
-let clickInterval = 1000;
-let keyInterval = 1000;
+let clickInterval = 100; // default 100ms
+let keyInterval = 100; // default 100ms
+
+let clickHotkey = 'F6';
+let keyHotkey = 'F7';
 
 function notifyClickerState() {
   if (win) {
@@ -86,9 +89,33 @@ function toggleKeyPresser() {
   }
 }
 
+function registerClickHotkey(accelerator) {
+  if (clickHotkey) {
+    globalShortcut.unregister(clickHotkey);
+  }
+  clickHotkey = accelerator;
+  if (clickHotkey) {
+    globalShortcut.register(clickHotkey, () => {
+      toggleClicker();
+    });
+  }
+}
+
+function registerKeyHotkey(accelerator) {
+  if (keyHotkey) {
+    globalShortcut.unregister(keyHotkey);
+  }
+  keyHotkey = accelerator;
+  if (keyHotkey) {
+    globalShortcut.register(keyHotkey, () => {
+      toggleKeyPresser();
+    });
+  }
+}
+
 function createWindow() {
   win = new MicaBrowserWindow({
-    width: 520,
+    width: 640,
     height: 300,
     titleBarStyle: 'hidden',
     titleBarOverlay: { color: '#00000000', symbolColor: '#ffffff' },
@@ -109,13 +136,8 @@ function createWindow() {
     win.show();
   });
 
-  globalShortcut.register('F6', () => {
-    toggleClicker();
-  });
-
-  globalShortcut.register('F7', () => {
-    toggleKeyPresser();
-  });
+  registerClickHotkey(clickHotkey);
+  registerKeyHotkey(keyHotkey);
 }
 
 app.whenReady().then(createWindow);
@@ -130,3 +152,5 @@ ipcMain.on('start-clicker', (e, interval) => startClicker(interval));
 ipcMain.on('stop-clicker', stopClicker);
 ipcMain.on('start-key', (e, data) => startKeyPresser(data.key, data.interval));
 ipcMain.on('stop-key', stopKeyPresser);
+ipcMain.on('set-click-hotkey', (e, accelerator) => registerClickHotkey(accelerator));
+ipcMain.on('set-key-hotkey', (e, accelerator) => registerKeyHotkey(accelerator));
