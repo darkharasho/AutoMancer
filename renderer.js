@@ -1,6 +1,9 @@
 const keySelect = document.getElementById('key');
+const header = document.querySelector('header');
 if (window.env && window.env.platform === 'darwin') {
-  document.querySelector('header').style.paddingLeft = '80px';
+  header.style.justifyContent = 'flex-end';
+} else {
+  header.style.justifyContent = 'flex-start';
 }
 const keys = [
   'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
