@@ -129,16 +129,18 @@ function pickPoint() {
       simpleFullscreen: isMac,
       transparent: true,
       frame: false,
-      show: true,
+      show: false,
       alwaysOnTop: true,
       skipTaskbar: true,
       backgroundColor: '#00000000',
+      hasShadow: false,
       webPreferences: {
         nodeIntegration: true,
         contextIsolation: false
       }
     });
     picker.loadFile(path.join(__dirname, 'picker.html'));
+    picker.once('ready-to-show', () => picker.show());
 
     const finish = () => {
       const pos = screen.getCursorScreenPoint();
