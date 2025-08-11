@@ -1,24 +1,29 @@
 # AutoMancer
 
-AutoMancer is a project designed to automate and enhance your workflow.
+AutoMancer is a basic Electron app that automates mouse clicks and keyboard presses.
+It showcases Windows 11 style using Mica effects and provides global hotkeys to toggle automation.
 
 ## Features
 
-- Easy setup and configuration
-- Modular and extensible architecture
-- Cross-platform support
+- Configurable auto clicker and key presser
+- Windows 11 Mica effect via `mica-electron`
+- Global hotkeys (F6 for clicker, F7 for key presser)
 
 ## Getting Started
 
-1. Clone the repository:
-    ```bash
-    git clone https://github.com/yourusername/AutoMancer.git
-    ```
-2. Follow the installation instructions in the [docs](./docs/).
+1. Install dependencies
+   ```bash
+   npm install
+   ```
+2. Run the app
+   ```bash
+   npm start
+   ```
 
-## Contributing
+## Notes
 
-Contributions are welcome! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
+- Hotkeys toggle the automation globally.
+- Intervals and keys can be adjusted in the UI.
 
 ## License
 

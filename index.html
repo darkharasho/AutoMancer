@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>AutoMancer</title>
+  <style>
+    body { font-family: sans-serif; margin: 20px; }
+    label { display: block; margin-top: 10px; }
+    button { margin-right: 5px; }
+    .status { font-weight: bold; margin-left: 10px; }
+  </style>
+</head>
+<body>
+  <h1>AutoMancer</h1>
+  <div>
+    <h2>Auto Clicker</h2>
+    <label>Interval (ms): <input id="clickInterval" type="number" value="1000" /></label>
+    <button id="startClicker">Start</button>
+    <button id="stopClicker">Stop</button>
+    <span class="status" id="clickerStatus">Stopped</span>
+  </div>
+  <div>
+    <h2>Auto Key Presser</h2>
+    <label>Key: <input id="key" type="text" value="a" /></label>
+    <label>Interval (ms): <input id="keyInterval" type="number" value="1000" /></label>
+    <button id="startKey">Start</button>
+    <button id="stopKey">Stop</button>
+    <span class="status" id="keyStatus">Stopped</span>
+  </div>
+  <p>Hotkeys: F6 toggles clicker, F7 toggles key presser.</p>
+  <script src="renderer.js"></script>
+</body>
+</html>
