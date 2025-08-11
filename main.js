@@ -273,7 +273,6 @@ function createWindow() {
     transparent: true,
     backgroundColor: '#00000000',
     show: false,
-    alwaysOnTop: true,
     ...(isMac ? { vibrancy: 'under-window', visualEffectState: 'active' } : {}),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
