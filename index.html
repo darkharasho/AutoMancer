@@ -40,7 +40,7 @@
       display: grid;
       gap: 16px;
       grid-template-columns: repeat(2, 1fr);
-      align-items: start;
+      align-items: stretch;
       box-sizing: border-box;
     }
     .card {
@@ -222,6 +222,16 @@
     body.modal-open main {
       filter: blur(4px);
     }
+
+    .version {
+      position: fixed;
+      bottom: 4px;
+      right: 8px;
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.2);
+      pointer-events: none;
+      -webkit-app-region: no-drag;
+    }
   </style>
 </head>
 <body>
@@ -278,6 +288,7 @@
     </div>
     </section>
   </main>
+  <div id="version" class="version"></div>
   <script src="renderer.js"></script>
 </body>
 </html>

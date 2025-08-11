@@ -1,5 +1,9 @@
 const keySelect = document.getElementById('key');
 const header = document.querySelector('header');
+const versionEl = document.getElementById('version');
+if (versionEl && window.appVersion) {
+  versionEl.textContent = `v${window.appVersion}`;
+}
 if (window.env && window.env.platform === 'darwin') {
   header.style.justifyContent = 'flex-end';
 } else {

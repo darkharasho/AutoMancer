@@ -1,6 +1,14 @@
 const { contextBridge, ipcRenderer } = require('electron');
+const fs = require('fs');
+const path = require('path');
+
+let appVersion = '';
+try {
+  appVersion = fs.readFileSync(path.join(__dirname, 'version.txt'), 'utf8').trim();
+} catch {}
 
 contextBridge.exposeInMainWorld('env', { platform: process.platform });
+contextBridge.exposeInMainWorld('appVersion', appVersion);
 
 contextBridge.exposeInMainWorld('auto', {
     startClicker: (config) => ipcRenderer.send('start-clicker', config),
