@@ -15,5 +15,8 @@
   },
   "devDependencies": {
     "electron-packager": "^17.1.1"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }

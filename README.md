@@ -13,6 +13,8 @@ Automation is powered by the `@jitsi/robotjs` library, which ships prebuilt bina
 
 ## Getting Started
 
+Ensure you have **Node.js 18 or newer** installed.
+
 1. Install dependencies
    ```bash
    npm install
