@@ -1,3 +1,7 @@
+<p align="center">
+   <img width="150" alt="AutoMancer" src="https://github.com/user-attachments/assets/23558d67-5660-48fb-b3a1-20b6d110cdc6" /> 
+</p>
+
 # AutoMancer
 
 AutoMancer is a basic Electron app that automates mouse clicks and keyboard presses.
