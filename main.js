@@ -15,6 +15,18 @@ let currentKey = 'a';
 let clickInterval = 1000;
 let keyInterval = 1000;
 
+function notifyClickerState() {
+  if (win) {
+    win.webContents.send('clicker-toggled', Boolean(clickIntervalId));
+  }
+}
+
+function notifyKeyState() {
+  if (win) {
+    win.webContents.send('key-toggled', Boolean(keyIntervalId));
+  }
+}
+
 function startClicker(interval) {
   stopClicker();
   clickInterval = interval || clickInterval;
@@ -26,6 +38,7 @@ function startClicker(interval) {
     robot.mouseClick();
     robot.moveMouse(mouse.x, mouse.y); // ensure position remains
   }, clickInterval);
+  notifyClickerState();
 }
 
 function stopClicker() {
@@ -33,6 +46,7 @@ function stopClicker() {
     clearInterval(clickIntervalId);
     clickIntervalId = null;
   }
+  notifyClickerState();
 }
 
 function startKeyPresser(key, interval) {
@@ -45,6 +59,7 @@ function startKeyPresser(key, interval) {
     }
     robot.keyTap(currentKey);
   }, keyInterval);
+  notifyKeyState();
 }
 
 function stopKeyPresser() {
@@ -52,6 +67,7 @@ function stopKeyPresser() {
     clearInterval(keyIntervalId);
     keyIntervalId = null;
   }
+  notifyKeyState();
 }
 
 function toggleClicker() {
@@ -72,9 +88,10 @@ function toggleKeyPresser() {
 
 function createWindow() {
   win = new MicaBrowserWindow({
-    width: 500,
-    height: 400,
-    frame: true,
+    width: 520,
+    height: 460,
+    titleBarStyle: 'hidden',
+    titleBarOverlay: { color: '#00000000', symbolColor: '#ffffff' },
     autoHideMenuBar: true,
     backgroundColor: '#00000000',
     show: false,
@@ -94,12 +111,10 @@ function createWindow() {
 
   globalShortcut.register('F6', () => {
     toggleClicker();
-    win.webContents.send('clicker-toggled', Boolean(clickIntervalId));
   });
 
   globalShortcut.register('F7', () => {
     toggleKeyPresser();
-    win.webContents.send('key-toggled', Boolean(keyIntervalId));
   });
 }
 
