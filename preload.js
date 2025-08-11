@@ -13,7 +13,7 @@ contextBridge.exposeInMainWorld('appVersion', appVersion);
 contextBridge.exposeInMainWorld('auto', {
     startClicker: (config) => ipcRenderer.send('start-clicker', config),
     stopClicker: () => ipcRenderer.send('stop-clicker'),
-    startKeyPresser: (key, interval) => ipcRenderer.send('start-key', { key, interval }),
+    startKeyPresser: (key, interval, mode) => ipcRenderer.send('start-key', { key, interval, mode }),
     stopKeyPresser: () => ipcRenderer.send('stop-key'),
     setClickHotkey: (accelerator) => ipcRenderer.send('set-click-hotkey', accelerator),
     setKeyHotkey: (accelerator) => ipcRenderer.send('set-key-hotkey', accelerator),

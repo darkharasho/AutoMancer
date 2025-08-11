@@ -133,6 +133,22 @@
       outline: 2px solid var(--accent);
     }
 
+    .radio-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+      -webkit-app-region: no-drag;
+    }
+    .radio-row span {
+      margin-right: auto;
+    }
+    .radio-row label {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: 8px;
+    }
+
     .coord-row {
       display: flex;
       gap: 8px;
@@ -211,12 +227,29 @@
     }
 
     .modal-content {
-      background: rgba(0,0,0,0.85);
+      position: relative;
+      background: rgba(0,0,0,0.7);
       backdrop-filter: blur(20px);
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 24px 32px;
       text-align: center;
+    }
+    .modal-content::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 2px;
+      background: linear-gradient(135deg, #D33818, #8B5CF6);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+              mask-composite: exclude;
+      pointer-events: none;
+    }
+    .close-btn {
+      margin-top: 16px;
+      padding: 6px 12px;
     }
     body.modal-open header,
     body.modal-open main {
@@ -279,6 +312,11 @@
         Interval (ms)
         <input id="keyInterval" type="number" value="100" min="1" />
       </label>
+      <div class="radio-row">
+        <span>Mode</span>
+        <label><input type="radio" name="keyMode" value="press" checked />Press</label>
+        <label><input type="radio" name="keyMode" value="hold" />Hold</label>
+      </div>
       <label>
         Toggle Hotkey
         <button id="keyHotkeyBtn" class="hotkey-btn">F7</button>

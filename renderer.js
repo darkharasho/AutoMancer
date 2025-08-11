@@ -91,7 +91,8 @@ toggleKeyBtn.addEventListener('click', () => {
   } else {
     const key = document.getElementById('key').value;
     const interval = parseInt(document.getElementById('keyInterval').value, 10);
-    window.auto.startKeyPresser(key, interval);
+    const mode = document.querySelector('input[name="keyMode"]:checked').value;
+    window.auto.startKeyPresser(key, interval, mode);
   }
 });
 
@@ -125,9 +126,14 @@ function toAccelerator(e) {
 function captureHotkey(button, setter) {
   const overlay = document.createElement('div');
   overlay.className = 'modal';
-  overlay.innerHTML = '<div class="modal-content"><p>Press a key combination</p></div>';
+  overlay.innerHTML = '<div class="modal-content"><p>Press a key combination</p><button class="close-btn start-btn">Close</button></div>';
   document.body.appendChild(overlay);
   document.body.classList.add('modal-open');
+
+  const closeBtn = overlay.querySelector('.close-btn');
+  closeBtn.addEventListener('click', () => {
+    cleanup();
+  });
 
   function handler(e) {
     e.preventDefault();

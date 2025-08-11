@@ -13,6 +13,8 @@ if (process.env.AUTOMANCER_ENABLE_GPU !== '1') {
 
 let clickIntervalId = null;
 let keyIntervalId = null;
+let keyMode = 'press';
+let keyRunning = false;
 let currentKey = 'a';
 let clickInterval = 100; // default 100ms
 let keyInterval = 100; // default 100ms
@@ -51,7 +53,7 @@ function notifyClickerState() {
 
 function notifyKeyState() {
   if (win && !win.isDestroyed()) {
-    win.webContents.send('key-toggled', Boolean(keyIntervalId));
+    win.webContents.send('key-toggled', keyRunning);
   }
 }
 
@@ -88,24 +90,41 @@ function stopClicker() {
   notifyClickerState();
 }
 
-function startKeyPresser(key, interval) {
+function startKeyPresser(key, interval, mode) {
   stopKeyPresser();
   currentKey = key || currentKey;
   keyInterval = interval || keyInterval;
-  keyIntervalId = setInterval(() => {
-    if (!robot) {
-      robot = require('@jitsi/robotjs');
-    }
-    robot.keyTap(currentKey);
-  }, keyInterval);
+  keyMode = mode || 'press';
+  if (!robot) {
+    robot = require('@jitsi/robotjs');
+  }
+  if (keyMode === 'hold') {
+    robot.keyToggle(currentKey, 'down');
+    keyRunning = true;
+  } else {
+    keyIntervalId = setInterval(() => {
+      if (!robot) {
+        robot = require('@jitsi/robotjs');
+      }
+      robot.keyTap(currentKey);
+    }, keyInterval);
+    keyRunning = true;
+  }
   notifyKeyState();
 }
 
 function stopKeyPresser() {
+  if (keyMode === 'hold') {
+    if (!robot) {
+      robot = require('@jitsi/robotjs');
+    }
+    robot.keyToggle(currentKey, 'up');
+  }
   if (keyIntervalId) {
     clearInterval(keyIntervalId);
     keyIntervalId = null;
   }
+  keyRunning = false;
   notifyKeyState();
 }
 
@@ -118,10 +137,10 @@ function toggleClicker() {
 }
 
 function toggleKeyPresser() {
-  if (keyIntervalId) {
+  if (keyRunning) {
     stopKeyPresser();
   } else {
-    startKeyPresser(currentKey, keyInterval);
+    startKeyPresser(currentKey, keyInterval, keyMode);
   }
 }
 
@@ -276,7 +295,7 @@ app.on('will-quit', () => {
 
   ipcMain.on('start-clicker', (e, config) => startClicker(config));
   ipcMain.on('stop-clicker', stopClicker);
-  ipcMain.on('start-key', (e, data) => startKeyPresser(data.key, data.interval));
+  ipcMain.on('start-key', (e, data) => startKeyPresser(data.key, data.interval, data.mode));
   ipcMain.on('stop-key', stopKeyPresser);
   ipcMain.on('set-click-hotkey', (e, accelerator) => registerClickHotkey(accelerator));
   ipcMain.on('set-key-hotkey', (e, accelerator) => registerKeyHotkey(accelerator));
