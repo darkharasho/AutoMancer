@@ -34,12 +34,12 @@ If you manage versions with `nvm`, the project ships an `.nvmrc` file; run `nvm 
 
 - Hotkeys toggle the automation globally.
 - Intervals and keys can be adjusted in the UI.
-- Hardware acceleration is disabled by default to prevent GPU process crashes.
+- Set `AUTOMANCER_DISABLE_GPU=1` before launching if you need to disable hardware acceleration.
 
 ### Troubleshooting
 
 If you encounter the error `Electron failed to install correctly`, remove the `node_modules` folder and rerun `npm install`.
-If Electron logs repeated GPU process crashes, the app already disables hardware acceleration; ensure your GPU drivers are up to date.
+If Electron logs repeated GPU process crashes, start the app with `AUTOMANCER_DISABLE_GPU=1 npm start` and ensure your GPU drivers are up to date.
 
 ## License
 

@@ -3,8 +3,10 @@ const path = require('path');
 const { MicaBrowserWindow } = require('mica-electron');
 let robot;
 
-// Disable GPU acceleration to avoid GPU process crashes on some systems
-app.disableHardwareAcceleration();
+// Allow disabling GPU acceleration via environment variable if needed
+if (process.env.AUTOMANCER_DISABLE_GPU === '1') {
+  app.disableHardwareAcceleration();
+}
 
 let clickIntervalId = null;
 let keyIntervalId = null;
@@ -71,7 +73,9 @@ function createWindow() {
   const win = new MicaBrowserWindow({
     width: 500,
     height: 400,
+    frame: true,
     autoHideMenuBar: true,
+    backgroundColor: '#00000000',
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
@@ -79,9 +83,9 @@ function createWindow() {
     }
   });
 
-  win.setMicaEffect();
-
-  win.loadFile('index.html');
+  win.loadFile(path.join(__dirname, 'index.html')).then(() => {
+    win.setMicaEffect();
+  });
 
   globalShortcut.register('F6', () => {
     toggleClicker();
