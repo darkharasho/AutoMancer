@@ -144,8 +144,7 @@ function captureHotkey(button, setter) {
     const accel = toAccelerator(e);
     if (!accel) return;
     button.textContent = accel;
-    await setter(accel);
-    const { clickHotkey, keyHotkey } = await window.auto.getHotkeys();
+    const { clickHotkey, keyHotkey } = await setter(accel);
     if (clickHotkey) clickHotkeyBtn.textContent = clickHotkey;
     if (keyHotkey) keyHotkeyBtn.textContent = keyHotkey;
     cleanup();

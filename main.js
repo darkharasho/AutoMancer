@@ -305,9 +305,11 @@ app.on('will-quit', () => {
   ipcMain.on('stop-key', stopKeyPresser);
   ipcMain.handle('set-click-hotkey', (e, accelerator) => {
     registerClickHotkey(accelerator);
+    return { clickHotkey, keyHotkey };
   });
   ipcMain.handle('set-key-hotkey', (e, accelerator) => {
     registerKeyHotkey(accelerator);
+    return { clickHotkey, keyHotkey };
   });
   ipcMain.handle('get-hotkeys', () => ({ clickHotkey, keyHotkey }));
   ipcMain.handle('pick-point', () => pickPoint());
