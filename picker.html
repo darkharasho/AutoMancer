@@ -15,14 +15,14 @@
           if (e.key === 'Escape') done();
         });
         const info = document.getElementById('info');
-        function update() {
-          const pos = screen.getCursorScreenPoint();
+        function update(e) {
+          const pos = e ? { x: e.screenX, y: e.screenY } : screen.getCursorScreenPoint();
           info.innerHTML = `${pos.x}, ${pos.y}<br><span style="font-size:11px">Click or press Esc</span>`;
           info.style.left = pos.x - offsetX + 15 + 'px';
           info.style.top = pos.y - offsetY + 15 + 'px';
-          requestAnimationFrame(update);
         }
         update();
+        window.addEventListener('mousemove', update);
       </script>
   </body>
 </html>
