@@ -100,6 +100,12 @@ function startKeyPresser(key, interval, mode) {
   }
   if (keyMode === 'hold') {
     robot.keyToggle(currentKey, 'down');
+    keyIntervalId = setInterval(() => {
+      if (!robot) {
+        robot = require('@jitsi/robotjs');
+      }
+      robot.keyToggle(currentKey, 'down');
+    }, 1000);
     keyRunning = true;
   } else {
     keyIntervalId = setInterval(() => {
@@ -114,15 +120,15 @@ function startKeyPresser(key, interval, mode) {
 }
 
 function stopKeyPresser() {
+  if (keyIntervalId) {
+    clearInterval(keyIntervalId);
+    keyIntervalId = null;
+  }
   if (keyMode === 'hold') {
     if (!robot) {
       robot = require('@jitsi/robotjs');
     }
     robot.keyToggle(currentKey, 'up');
-  }
-  if (keyIntervalId) {
-    clearInterval(keyIntervalId);
-    keyIntervalId = null;
   }
   keyRunning = false;
   notifyKeyState();
@@ -304,7 +310,7 @@ app.on('will-quit', () => {
   ipcMain.on('resize-window', (e, height) => {
     if (win && !win.isDestroyed()) {
       const [w] = win.getContentSize();
-      win.setContentSize(w, Math.round(height));
+      win.setContentSize(w, Math.ceil(height));
     }
   });
 

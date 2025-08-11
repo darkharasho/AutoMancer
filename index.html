@@ -31,6 +31,8 @@
       -webkit-app-region: drag;
       font-weight: 500;
     }
+    body.mac header { justify-content: flex-end; }
+    body.win header { justify-content: flex-start; }
     header img {
       height: 20px;
       margin-right: 8px;
@@ -224,6 +226,8 @@
       justify-content: center;
       background: rgba(0,0,0,0.4);
       backdrop-filter: blur(4px);
+      z-index: 1000;
+      -webkit-app-region: no-drag;
     }
 
     .modal-content {
