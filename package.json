@@ -1,0 +1,23 @@
+{
+  "name": "automancer",
+  "version": "1.0.0",
+  "description": "Configurable auto clicker and key presser with Mica effect",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "package": "electron-packager . AutoMancer --platform=win32 --arch=x64 --out=dist --overwrite",
+    "test": "echo \"No tests specified\""
+  },
+  "dependencies": {
+    "electron": "^27.1.0",
+    "mica-electron": "^1.5.16",
+    "@jitsi/robotjs": "^0.6.17"
+  },
+  "devDependencies": {
+    "electron-packager": "^17.1.1"
+  },
+  "engines": {
+    "node": ">=18 <22",
+    "npm": ">=9"
+  }
+}
