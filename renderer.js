@@ -96,3 +96,8 @@ clickHotkeyBtn.addEventListener('click', () => captureHotkey(clickHotkeyBtn, win
 
 const keyHotkeyBtn = document.getElementById('keyHotkeyBtn');
 keyHotkeyBtn.addEventListener('click', () => captureHotkey(keyHotkeyBtn, window.auto.setKeyHotkey));
+
+window.auto.getHotkeys().then(({ clickHotkey, keyHotkey }) => {
+  if (clickHotkey) clickHotkeyBtn.textContent = clickHotkey;
+  if (keyHotkey) keyHotkeyBtn.textContent = keyHotkey;
+});

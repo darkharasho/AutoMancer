@@ -9,7 +9,7 @@ Automation is powered by the `@jitsi/robotjs` library, which ships prebuilt bina
 - Configurable auto clicker and key presser
 - Automation via prebuilt `@jitsi/robotjs`
 - Windows 11 Mica effect via `mica-electron` (falls back to macOS vibrancy)
-- User-configurable global hotkeys for clicker and key presser
+- User-configurable global hotkeys for clicker and key presser (persist between launches)
 
 ## Getting Started
 

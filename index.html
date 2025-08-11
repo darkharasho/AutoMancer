@@ -57,23 +57,27 @@
     label {
       display: flex;
       align-items: center;
-      gap: 8px;
       margin-bottom: 8px;
       -webkit-app-region: no-drag;
     }
+    label > :is(input, select, button) {
+      margin-left: auto;
+    }
     input[type="number"], select {
       width: 100px;
-      flex: 0 0 100px;
       background: rgba(255, 255, 255, 0.07);
       border: 1px solid var(--border);
       border-radius: 6px;
       padding: 6px 8px;
       color: #fff;
     }
+    input[type="number"] {
+      text-align: right;
+    }
 
     .hotkey-btn {
-      flex: 1;
-      text-align: left;
+      width: 100px;
+      padding: 6px 8px;
     }
 
     /* Modern dark-themed dropdown */

@@ -1,5 +1,6 @@
 const { app, ipcMain, globalShortcut, BrowserWindow } = require('electron');
 const path = require('path');
+const fs = require('fs');
 const { MicaBrowserWindow } = require('mica-electron');
 let robot;
 let win;
@@ -17,6 +18,27 @@ let keyInterval = 100; // default 100ms
 
 let clickHotkey = 'F6';
 let keyHotkey = 'F7';
+let settingsPath;
+
+function loadSettings() {
+  try {
+    const data = fs.readFileSync(settingsPath, 'utf8');
+    const cfg = JSON.parse(data);
+    if (cfg.clickHotkey) clickHotkey = cfg.clickHotkey;
+    if (cfg.keyHotkey) keyHotkey = cfg.keyHotkey;
+  } catch (_) {
+    // ignore
+  }
+}
+
+function saveSettings() {
+  if (!settingsPath) return;
+  try {
+    fs.writeFileSync(settingsPath, JSON.stringify({ clickHotkey, keyHotkey }));
+  } catch (_) {
+    // ignore
+  }
+}
 
 function notifyClickerState() {
   if (win && !win.isDestroyed()) {
@@ -99,6 +121,7 @@ function registerClickHotkey(accelerator) {
       toggleClicker();
     });
   }
+  saveSettings();
 }
 
 function registerKeyHotkey(accelerator) {
@@ -111,6 +134,7 @@ function registerKeyHotkey(accelerator) {
       toggleKeyPresser();
     });
   }
+  saveSettings();
 }
 
 function createWindow() {
@@ -149,7 +173,11 @@ function createWindow() {
   registerKeyHotkey(keyHotkey);
 }
 
-app.whenReady().then(createWindow);
+app.whenReady().then(() => {
+  settingsPath = path.join(app.getPath('userData'), 'settings.json');
+  loadSettings();
+  createWindow();
+});
 
 app.on('will-quit', () => {
   globalShortcut.unregisterAll();
@@ -163,3 +191,4 @@ ipcMain.on('start-key', (e, data) => startKeyPresser(data.key, data.interval));
 ipcMain.on('stop-key', stopKeyPresser);
 ipcMain.on('set-click-hotkey', (e, accelerator) => registerClickHotkey(accelerator));
 ipcMain.on('set-key-hotkey', (e, accelerator) => registerKeyHotkey(accelerator));
+ipcMain.handle('get-hotkeys', () => ({ clickHotkey, keyHotkey }));
