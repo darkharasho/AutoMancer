@@ -61,15 +61,31 @@ function toAccelerator(e) {
   return parts.join('+');
 }
 
-function setupHotkeyInput(id, setter) {
-  const el = document.getElementById(id);
-  el.addEventListener('keydown', (e) => {
+function captureHotkey(button, setter) {
+  const overlay = document.createElement('div');
+  overlay.className = 'modal';
+  overlay.innerHTML = '<div class="modal-content"><p>Press a key combination</p></div>';
+  document.body.appendChild(overlay);
+
+  function handler(e) {
     e.preventDefault();
     const accel = toAccelerator(e);
-    el.value = accel;
+    if (!accel) return;
+    button.textContent = accel;
     setter(accel);
-  });
+    cleanup();
+  }
+
+  function cleanup() {
+    window.removeEventListener('keydown', handler, true);
+    overlay.remove();
+  }
+
+  window.addEventListener('keydown', handler, true);
 }
 
-setupHotkeyInput('clickHotkey', window.auto.setClickHotkey);
-setupHotkeyInput('keyHotkey', window.auto.setKeyHotkey);
+const clickHotkeyBtn = document.getElementById('clickHotkeyBtn');
+clickHotkeyBtn.addEventListener('click', () => captureHotkey(clickHotkeyBtn, window.auto.setClickHotkey));
+
+const keyHotkeyBtn = document.getElementById('keyHotkeyBtn');
+keyHotkeyBtn.addEventListener('click', () => captureHotkey(keyHotkeyBtn, window.auto.setKeyHotkey));

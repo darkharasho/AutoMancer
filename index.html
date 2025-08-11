@@ -70,6 +70,11 @@
       color: #fff;
     }
 
+    .hotkey-btn {
+      flex: 1;
+      text-align: left;
+    }
+
     /* Modern dark-themed dropdown */
     select {
       appearance: none;
@@ -112,11 +117,22 @@
       flex: 1;
       font-weight: 500;
     }
-    footer {
-      margin-top: 8px;
-      padding: 0 24px 16px;
-      font-size: 12px;
-      opacity: 0.7;
+    .modal {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.4);
+    }
+
+    .modal-content {
+      background: var(--bg);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px 32px;
+      text-align: center;
     }
   </style>
 </head>
@@ -131,7 +147,7 @@
       </label>
       <label>
         Toggle Hotkey
-        <input id="clickHotkey" type="text" value="F6" readonly />
+        <button id="clickHotkeyBtn" class="hotkey-btn">F6</button>
       </label>
       <div class="actions">
         <button id="startClicker">Start</button>
@@ -151,16 +167,15 @@
       </label>
       <label>
         Toggle Hotkey
-        <input id="keyHotkey" type="text" value="F7" readonly />
+        <button id="keyHotkeyBtn" class="hotkey-btn">F7</button>
       </label>
-      <div class="actions">
-        <button id="startKey">Start</button>
-        <button id="stopKey">Stop</button>
-        <span class="status" id="keyStatus">Stopped</span>
-      </div>
+    <div class="actions">
+      <button id="startKey">Start</button>
+      <button id="stopKey">Stop</button>
+      <span class="status" id="keyStatus">Stopped</span>
+    </div>
     </section>
   </main>
-  <footer>Hotkeys are configurable in each section.</footer>
   <script src="renderer.js"></script>
 </body>
 </html>
