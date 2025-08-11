@@ -1,4 +1,4 @@
-const { app, ipcMain, globalShortcut, BrowserWindow, screen } = require('electron');
+const { app, ipcMain, globalShortcut, BrowserWindow, screen, nativeImage } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const { MicaBrowserWindow } = require('mica-electron');
@@ -203,19 +203,25 @@ function registerKeyHotkey(accelerator) {
 function createWindow() {
   const isWin = process.platform === 'win32';
   const isMac = process.platform === 'darwin';
+  const basePath = app.isPackaged ? process.resourcesPath : app.getAppPath();
   const iconPath = path.join(
-    app.getAppPath(),
+    basePath,
     'images',
     isMac ? 'AutoMancer.icns' : isWin ? 'AutoMancer.ico' : 'AutoMancer.png'
   );
-  if (isMac) {
-    app.dock.setIcon(iconPath);
+  const icon = nativeImage.createFromPath(iconPath);
+  if (isMac && !icon.isEmpty()) {
+    try {
+      app.dock.setIcon(icon);
+    } catch (_) {
+      // ignore if icon fails to load
+    }
   }
   const WindowClass = isWin ? MicaBrowserWindow : BrowserWindow;
   win = new WindowClass({
     width: 640,
     height: 360,
-    icon: iconPath,
+    icon: icon.isEmpty() ? undefined : icon,
     titleBarStyle: 'hidden',
     titleBarOverlay: { color: '#00000000', symbolColor: '#ffffff' },
     autoHideMenuBar: true,
