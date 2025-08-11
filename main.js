@@ -5,8 +5,9 @@ const { MicaBrowserWindow } = require('mica-electron');
 let robot;
 let win;
 
-// Allow disabling GPU acceleration via environment variable if needed
-if (process.env.AUTOMANCER_DISABLE_GPU === '1') {
+// Disable GPU acceleration by default to avoid crashes on some systems.
+// Set AUTOMANCER_ENABLE_GPU=1 to opt in to hardware acceleration.
+if (process.env.AUTOMANCER_ENABLE_GPU !== '1') {
   app.disableHardwareAcceleration();
 }
 

@@ -14,7 +14,7 @@ Automation is powered by the `@jitsi/robotjs` library, which ships prebuilt bina
 
 ## Getting Started
 
-Use **Node.js 18 or 20** with **npm 9+**. Newer releases such as Node 22 are currently unsupported and may fail during dependency installation.
+Use **Node.js 18** with **npm 9+**. Newer releases such as Node 20+ are currently unsupported and may fail during dependency installation.
 
 If you manage versions with `nvm`, the project ships an `.nvmrc` file; run `nvm use` to switch to the recommended Node version.
 
@@ -36,14 +36,14 @@ If you manage versions with `nvm`, the project ships an `.nvmrc` file; run `nvm 
 - Hotkeys toggle the automation globally and can be changed via set-hotkey popups.
 - Intervals (default 100ms) and keys can be adjusted in the UI.
 - Toggle buttons turn green while their automation is running.
-- Set `AUTOMANCER_DISABLE_GPU=1` before launching if you need to disable hardware acceleration.
+- Hardware acceleration is disabled by default. Launch with `AUTOMANCER_ENABLE_GPU=1 npm start` to turn it on.
 - On macOS the window uses vibrancy instead of Mica and the title is offset to avoid overlapping system controls.
  - Use the Pick button to grab screen coordinates; press Esc or click to confirm the position.
 
 ### Troubleshooting
 
 If you encounter the error `Electron failed to install correctly`, remove the `node_modules` folder and rerun `npm install`.
-If Electron logs repeated GPU process crashes, start the app with `AUTOMANCER_DISABLE_GPU=1 npm start` and ensure your GPU drivers are up to date.
+If you experiment with GPU acceleration and encounter crashes, remove `AUTOMANCER_ENABLE_GPU=1` and ensure your GPU drivers are up to date.
 
 ## License
 
