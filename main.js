@@ -124,10 +124,23 @@ function toggleKeyPresser() {
 
 function pickPoint() {
   return new Promise((resolve) => {
-    const isMac = process.platform === 'darwin';
+    const displays = screen.getAllDisplays();
+    let minX = Infinity;
+    let minY = Infinity;
+    let maxX = -Infinity;
+    let maxY = -Infinity;
+    for (const d of displays) {
+      const b = d.bounds;
+      minX = Math.min(minX, b.x);
+      minY = Math.min(minY, b.y);
+      maxX = Math.max(maxX, b.x + b.width);
+      maxY = Math.max(maxY, b.y + b.height);
+    }
     const picker = new BrowserWindow({
-      fullscreen: !isMac,
-      simpleFullscreen: isMac,
+      x: minX,
+      y: minY,
+      width: maxX - minX,
+      height: maxY - minY,
       transparent: true,
       frame: false,
       show: false,
@@ -140,7 +153,9 @@ function pickPoint() {
         contextIsolation: false
       }
     });
-    picker.loadFile(path.join(__dirname, 'picker.html'));
+    picker.loadFile(path.join(__dirname, 'picker.html'), {
+      query: { offsetX: minX, offsetY: minY }
+    });
     picker.once('ready-to-show', () => picker.show());
 
     const finish = () => {
