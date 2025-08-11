@@ -3,6 +3,9 @@ const path = require('path');
 const { MicaBrowserWindow } = require('mica-electron');
 let robot;
 
+// Disable GPU acceleration to avoid GPU process crashes on some systems
+app.disableHardwareAcceleration();
+
 let clickIntervalId = null;
 let keyIntervalId = null;
 let currentKey = 'a';
