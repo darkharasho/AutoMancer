@@ -101,6 +101,7 @@ function captureHotkey(button, setter) {
   overlay.className = 'modal';
   overlay.innerHTML = '<div class="modal-content"><p>Press a key combination</p></div>';
   document.body.appendChild(overlay);
+  document.body.classList.add('modal-open');
 
   function handler(e) {
     e.preventDefault();
@@ -115,6 +116,7 @@ function captureHotkey(button, setter) {
   function cleanup() {
     window.removeEventListener('keydown', handler, true);
     overlay.remove();
+    document.body.classList.remove('modal-open');
   }
 
   window.addEventListener('keydown', handler, true);

@@ -209,6 +209,7 @@ function createWindow() {
     autoHideMenuBar: true,
     backgroundColor: '#01000000',
     show: false,
+    alwaysOnTop: true,
     ...(isMac ? { vibrancy: 'under-window', visualEffectState: 'active' } : {}),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
