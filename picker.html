@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <body style="margin:0;background:rgba(0,0,0,0.1);cursor:crosshair;">
+      <div id="info" style="position:fixed;pointer-events:none;background:rgba(0,0,0,0.6);color:#fff;padding:4px 8px;border-radius:6px;font-family:system-ui,sans-serif;font-size:12px;"></div>
+      <script>
+        const { ipcRenderer } = require('electron');
+        function done() {
+          ipcRenderer.send('picker-done');
+        }
+        window.addEventListener('mousedown', done);
+        window.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') done();
+        });
+        const info = document.getElementById('info');
+        window.addEventListener('mousemove', (e) => {
+          info.innerHTML = `${e.screenX}, ${e.screenY}<br><span style="font-size:11px">Click or press Esc</span>`;
+          info.style.left = e.pageX + 15 + 'px';
+          info.style.top = e.pageY + 15 + 'px';
+        });
+      </script>
+  </body>
+</html>
