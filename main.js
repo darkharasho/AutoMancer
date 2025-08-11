@@ -93,7 +93,7 @@ function createWindow() {
     titleBarStyle: 'hidden',
     titleBarOverlay: { color: '#00000000', symbolColor: '#ffffff' },
     autoHideMenuBar: true,
-    backgroundColor: '#00000000',
+    backgroundColor: '#01000000',
     show: false,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
