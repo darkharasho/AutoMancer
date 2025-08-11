@@ -17,16 +17,39 @@ keys.forEach(k => {
 });
 keySelect.value = 'a';
 
-const toggleClickerBtn = document.getElementById('toggleClicker');
-toggleClickerBtn.addEventListener('click', () => {
-  const running = toggleClickerBtn.classList.contains('running');
-  if (running) {
-    window.auto.stopClicker();
-  } else {
-    const interval = parseInt(document.getElementById('clickInterval').value, 10);
-    window.auto.startClicker(interval);
-  }
-});
+  const clickButtonSel = document.getElementById('clickButton');
+  const clickTargetSel = document.getElementById('clickTarget');
+  const coordFields = document.getElementById('coordFields');
+  const coordX = document.getElementById('coordX');
+  const coordY = document.getElementById('coordY');
+  const pickCoordBtn = document.getElementById('pickCoord');
+
+  clickTargetSel.addEventListener('change', () => {
+    coordFields.style.display = clickTargetSel.value === 'coords' ? 'flex' : 'none';
+  });
+
+  pickCoordBtn.addEventListener('click', async () => {
+    const point = await window.auto.pickPoint();
+    if (point) {
+      coordX.value = point.x;
+      coordY.value = point.y;
+    }
+  });
+
+  const toggleClickerBtn = document.getElementById('toggleClicker');
+  toggleClickerBtn.addEventListener('click', () => {
+    const running = toggleClickerBtn.classList.contains('running');
+    if (running) {
+      window.auto.stopClicker();
+    } else {
+      const interval = parseInt(document.getElementById('clickInterval').value, 10);
+      const button = clickButtonSel.value;
+      const target = clickTargetSel.value === 'coords'
+        ? { type: 'coords', x: parseInt(coordX.value, 10), y: parseInt(coordY.value, 10) }
+        : { type: 'current' };
+      window.auto.startClicker({ interval, button, target });
+    }
+  });
 
 const toggleKeyBtn = document.getElementById('toggleKey');
 toggleKeyBtn.addEventListener('click', () => {

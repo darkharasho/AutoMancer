@@ -33,6 +33,8 @@
       display: grid;
       gap: 16px;
       grid-template-columns: repeat(2, 1fr);
+      height: calc(100vh - 32px);
+      box-sizing: border-box;
     }
     .card {
       background: var(--bg);
@@ -40,6 +42,8 @@
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 16px;
+      display: flex;
+      flex-direction: column;
     }
     h1, h2 {
       margin: 0 0 12px;
@@ -106,7 +110,8 @@
     .actions {
       display: flex;
       align-items: center;
-      margin-top: 8px;
+      justify-content: center;
+      margin-top: auto;
       -webkit-app-region: no-drag;
     }
     .actions button {
@@ -160,6 +165,32 @@
         Interval (ms)
         <input id="clickInterval" type="number" value="100" min="1" />
       </label>
+      <label>
+        Button
+        <select id="clickButton">
+          <option value="left">left</option>
+          <option value="middle">middle</option>
+          <option value="right">right</option>
+        </select>
+      </label>
+      <label>
+        Target
+        <select id="clickTarget">
+          <option value="current">Current location</option>
+          <option value="coords">Use coordinates</option>
+        </select>
+      </label>
+      <div id="coordFields" style="display:none; gap:8px; flex-direction:column;">
+        <label>
+          X
+          <input id="coordX" type="number" value="0" />
+        </label>
+        <label>
+          Y
+          <input id="coordY" type="number" value="0" />
+        </label>
+        <button id="pickCoord" class="hotkey-btn">Pick</button>
+      </div>
       <label>
         Toggle Hotkey
         <button id="clickHotkeyBtn" class="hotkey-btn">F6</button>

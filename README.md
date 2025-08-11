@@ -6,7 +6,8 @@ Automation is powered by the `@jitsi/robotjs` library, which ships prebuilt bina
 
 ## Features
 
-- Configurable auto clicker and key presser
+ - Configurable auto clicker and key presser
+ - Choose left/middle/right mouse button and click at the cursor or fixed coordinates
 - Automation via prebuilt `@jitsi/robotjs`
 - Windows 11 Mica effect via `mica-electron` (falls back to macOS vibrancy)
 - User-configurable global hotkeys for clicker and key presser (persist between launches)
@@ -37,6 +38,7 @@ If you manage versions with `nvm`, the project ships an `.nvmrc` file; run `nvm 
 - Toggle buttons turn green while their automation is running.
 - Set `AUTOMANCER_DISABLE_GPU=1` before launching if you need to disable hardware acceleration.
 - On macOS the window uses vibrancy instead of Mica and the title is offset to avoid overlapping system controls.
+ - Use the Pick button to grab screen coordinates; press Esc or click to confirm the position.
 
 ### Troubleshooting
 

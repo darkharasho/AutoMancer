@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <body style="margin:0;background:rgba(0,0,0,0.3);">
+    <script>
+      const { ipcRenderer } = require('electron');
+      function done() {
+        ipcRenderer.send('picker-done');
+      }
+      window.addEventListener('mousedown', done);
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') done();
+      });
+    </script>
+  </body>
+</html>

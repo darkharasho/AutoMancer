@@ -1,4 +1,4 @@
-const { app, ipcMain, globalShortcut, BrowserWindow } = require('electron');
+const { app, ipcMain, globalShortcut, BrowserWindow, screen } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const { MicaBrowserWindow } = require('mica-electron');
@@ -15,6 +15,8 @@ let keyIntervalId = null;
 let currentKey = 'a';
 let clickInterval = 100; // default 100ms
 let keyInterval = 100; // default 100ms
+let clickButton = 'left';
+let clickTarget = { type: 'current' };
 
 let clickHotkey = 'F6';
 let keyHotkey = 'F7';
@@ -52,16 +54,24 @@ function notifyKeyState() {
   }
 }
 
-function startClicker(interval) {
+function startClicker(config) {
   stopClicker();
-  clickInterval = interval || clickInterval;
+  if (config) {
+    clickInterval = config.interval || clickInterval;
+    clickButton = config.button || clickButton;
+    clickTarget = config.target || clickTarget;
+  }
   clickIntervalId = setInterval(() => {
     if (!robot) {
       robot = require('@jitsi/robotjs');
     }
-    const mouse = robot.getMousePos();
-    robot.mouseClick();
-    robot.moveMouse(mouse.x, mouse.y); // ensure position remains
+    if (clickTarget.type === 'coords') {
+      robot.moveMouse(clickTarget.x, clickTarget.y);
+    }
+    robot.mouseClick(clickButton);
+    if (clickTarget.type === 'coords') {
+      robot.moveMouse(clickTarget.x, clickTarget.y);
+    }
   }, clickInterval);
   notifyClickerState();
 }
@@ -99,7 +109,7 @@ function toggleClicker() {
   if (clickIntervalId) {
     stopClicker();
   } else {
-    startClicker(clickInterval);
+    startClicker();
   }
 }
 
@@ -109,6 +119,34 @@ function toggleKeyPresser() {
   } else {
     startKeyPresser(currentKey, keyInterval);
   }
+}
+
+function pickPoint() {
+  return new Promise((resolve) => {
+    const picker = new BrowserWindow({
+      fullscreen: true,
+      transparent: true,
+      frame: false,
+      show: true,
+      alwaysOnTop: true,
+      webPreferences: {
+        nodeIntegration: true,
+        contextIsolation: false
+      }
+    });
+    picker.loadURL(path.join('file://', __dirname, 'picker.html'));
+
+    const finish = () => {
+      const pos = screen.getCursorScreenPoint();
+      resolve(pos);
+      picker.close();
+    };
+
+    ipcMain.once('picker-done', finish);
+    picker.on('closed', () => {
+      ipcMain.removeListener('picker-done', finish);
+    });
+  });
 }
 
 function registerClickHotkey(accelerator) {
@@ -141,9 +179,9 @@ function createWindow() {
   const isWin = process.platform === 'win32';
   const isMac = process.platform === 'darwin';
   const WindowClass = isWin ? MicaBrowserWindow : BrowserWindow;
-  win = new WindowClass({
-    width: 640,
-    height: 300,
+    win = new WindowClass({
+      width: 640,
+      height: 360,
     titleBarStyle: 'hidden',
     titleBarOverlay: { color: '#00000000', symbolColor: '#ffffff' },
     autoHideMenuBar: true,
@@ -185,10 +223,11 @@ app.on('will-quit', () => {
   stopKeyPresser();
 });
 
-ipcMain.on('start-clicker', (e, interval) => startClicker(interval));
-ipcMain.on('stop-clicker', stopClicker);
-ipcMain.on('start-key', (e, data) => startKeyPresser(data.key, data.interval));
-ipcMain.on('stop-key', stopKeyPresser);
-ipcMain.on('set-click-hotkey', (e, accelerator) => registerClickHotkey(accelerator));
-ipcMain.on('set-key-hotkey', (e, accelerator) => registerKeyHotkey(accelerator));
-ipcMain.handle('get-hotkeys', () => ({ clickHotkey, keyHotkey }));
+  ipcMain.on('start-clicker', (e, config) => startClicker(config));
+  ipcMain.on('stop-clicker', stopClicker);
+  ipcMain.on('start-key', (e, data) => startKeyPresser(data.key, data.interval));
+  ipcMain.on('stop-key', stopKeyPresser);
+  ipcMain.on('set-click-hotkey', (e, accelerator) => registerClickHotkey(accelerator));
+  ipcMain.on('set-key-hotkey', (e, accelerator) => registerKeyHotkey(accelerator));
+  ipcMain.handle('get-hotkeys', () => ({ clickHotkey, keyHotkey }));
+  ipcMain.handle('pick-point', () => pickPoint());
