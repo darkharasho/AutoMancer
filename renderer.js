@@ -1,6 +1,10 @@
 const keySelect = document.getElementById('key');
 const header = document.querySelector('header');
-if (window.env && window.env.platform === 'darwin') {
+const platform = window.env && window.env.platform;
+if (platform) {
+  document.body.classList.add(platform);
+}
+if (platform === 'darwin') {
   header.style.justifyContent = 'flex-end';
 } else {
   header.style.justifyContent = 'flex-start';

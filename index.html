@@ -22,6 +22,11 @@
       background: rgba(0, 0, 0, 0.01);
       user-select: none;
     }
+
+    body.win32 {
+      border-radius: 12px;
+      overflow: hidden;
+    }
     header {
       height: 32px;
       padding: 0 12px;
@@ -47,7 +52,7 @@
       backdrop-filter: blur(20px);
       border: 2px solid transparent;
       border-image: linear-gradient(to bottom right, #D33818, #8c5cf3) 1;
-      border-radius: 12px;
+      border-radius: 16px;
       padding: 16px;
       display: flex;
       flex-direction: column;
@@ -156,6 +161,7 @@
       width: var(--field-width);
       border: 2px solid transparent;
       border-image: linear-gradient(to bottom right, #D33818, #8c5cf3) 1;
+      border-radius: 12px;
     }
     button {
       flex: 0 0 auto;
