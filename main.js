@@ -19,13 +19,13 @@ let clickHotkey = 'F6';
 let keyHotkey = 'F7';
 
 function notifyClickerState() {
-  if (win) {
+  if (win && !win.isDestroyed()) {
     win.webContents.send('clicker-toggled', Boolean(clickIntervalId));
   }
 }
 
 function notifyKeyState() {
-  if (win) {
+  if (win && !win.isDestroyed()) {
     win.webContents.send('key-toggled', Boolean(keyIntervalId));
   }
 }
@@ -140,6 +140,9 @@ function createWindow() {
       win.setMicaEffect();
     }
     win.show();
+  });
+  win.on('closed', () => {
+    win = null;
   });
 
   registerClickHotkey(clickHotkey);
