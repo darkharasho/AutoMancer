@@ -24,8 +24,14 @@ keySelect.value = 'a';
   const coordY = document.getElementById('coordY');
   const pickCoordBtn = document.getElementById('pickCoord');
 
+  function resizeToContent() {
+    const h = document.documentElement.scrollHeight;
+    window.auto.resize(h);
+  }
+
   clickTargetSel.addEventListener('change', () => {
     coordFields.style.display = clickTargetSel.value === 'coords' ? 'flex' : 'none';
+    resizeToContent();
   });
 
   pickCoordBtn.addEventListener('click', async () => {
@@ -123,4 +129,5 @@ keyHotkeyBtn.addEventListener('click', () => captureHotkey(keyHotkeyBtn, window.
 window.auto.getHotkeys().then(({ clickHotkey, keyHotkey }) => {
   if (clickHotkey) clickHotkeyBtn.textContent = clickHotkey;
   if (keyHotkey) keyHotkeyBtn.textContent = keyHotkey;
+  resizeToContent();
 });

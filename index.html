@@ -110,15 +110,12 @@
       outline: 2px solid var(--accent);
     }
 
-    .wide-input {
-      width: 100%;
-      margin-bottom: 8px;
-    }
-
     .coord-row {
       display: flex;
       gap: 8px;
       margin-bottom: 8px;
+      margin-left: auto;
+      justify-content: flex-end;
     }
     .coord-row input {
       width: 60px;
@@ -198,11 +195,13 @@
           <option value="right">right</option>
         </select>
       </label>
-      <label for="clickTarget">Target</label>
-      <select id="clickTarget" class="wide-input">
-        <option value="current">Current location</option>
-        <option value="coords">Use coordinates</option>
-      </select>
+      <label>
+        Target
+        <select id="clickTarget">
+          <option value="current">Current location</option>
+          <option value="coords">Use coordinates</option>
+        </select>
+      </label>
       <div id="coordFields" class="coord-row" style="display:none;">
         <input id="coordX" type="number" value="0" placeholder="X" />
         <input id="coordY" type="number" value="0" placeholder="Y" />

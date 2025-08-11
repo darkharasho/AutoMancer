@@ -3,7 +3,9 @@
   <body style="margin:0;background:rgba(0,0,0,0.1);cursor:crosshair;">
       <div id="info" style="position:fixed;pointer-events:none;background:rgba(0,0,0,0.6);color:#fff;padding:4px 8px;border-radius:6px;font-family:system-ui,sans-serif;font-size:12px;"></div>
       <script>
-        const { ipcRenderer, screen } = require('electron');
+        const electron = require('electron');
+        const { ipcRenderer } = electron;
+        const screen = electron.screen;
         const params = new URLSearchParams(location.search);
         const offsetX = parseInt(params.get('offsetX') || '0', 10);
         const offsetY = parseInt(params.get('offsetY') || '0', 10);
@@ -15,14 +17,17 @@
           if (e.key === 'Escape') done();
         });
         const info = document.getElementById('info');
-        function update(e) {
-          const pos = e ? { x: e.screenX, y: e.screenY } : screen.getCursorScreenPoint();
+        function update() {
+          let pos = { x: 0, y: 0 };
+          if (screen && screen.getCursorScreenPoint) {
+            pos = screen.getCursorScreenPoint();
+          }
           info.innerHTML = `${pos.x}, ${pos.y}<br><span style="font-size:11px">Click or press Esc</span>`;
           info.style.left = pos.x - offsetX + 15 + 'px';
           info.style.top = pos.y - offsetY + 15 + 'px';
+          requestAnimationFrame(update);
         }
         update();
-        window.addEventListener('mousemove', update);
       </script>
   </body>
 </html>
