@@ -31,6 +31,10 @@ Automation is powered by the `@jitsi/robotjs` library, which ships prebuilt bina
 - Hotkeys toggle the automation globally.
 - Intervals and keys can be adjusted in the UI.
 
+### Troubleshooting
+
+If you encounter the error `Electron failed to install correctly`, remove the `node_modules` folder and rerun `npm install`.
+
 ## License
 
 This project is licensed under the MIT License.
