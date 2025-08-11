@@ -314,6 +314,16 @@ app.on('will-quit', () => {
     }
   });
 
+  ipcMain.on('suspend-hotkeys', () => {
+    globalShortcut.unregister(clickHotkey);
+    globalShortcut.unregister(keyHotkey);
+  });
+
+  ipcMain.on('resume-hotkeys', () => {
+    registerClickHotkey(clickHotkey);
+    registerKeyHotkey(keyHotkey);
+  });
+
   ipcMain.on('update-click-config', (e, config) => {
     if (config) {
       if (Number.isFinite(config.interval)) clickInterval = config.interval;

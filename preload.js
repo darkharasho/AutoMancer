@@ -22,5 +22,7 @@ contextBridge.exposeInMainWorld('auto', {
     onKeyToggled: (callback) => ipcRenderer.on('key-toggled', (_, state) => callback(state)),
     pickPoint: () => ipcRenderer.invoke('pick-point'),
     resize: (height) => ipcRenderer.send('resize-window', height),
-    updateClickConfig: (config) => ipcRenderer.send('update-click-config', config)
+    updateClickConfig: (config) => ipcRenderer.send('update-click-config', config),
+    suspendHotkeys: () => ipcRenderer.send('suspend-hotkeys'),
+    resumeHotkeys: () => ipcRenderer.send('resume-hotkeys')
   });

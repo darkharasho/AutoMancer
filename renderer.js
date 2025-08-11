@@ -3,7 +3,7 @@ const versionEl = document.getElementById('version');
 if (versionEl && window.appVersion) {
   versionEl.textContent = `v${window.appVersion}`;
 }
-const platform = window.env?.platform;
+const platform = window.env?.platform || (/mac/i.test(navigator.platform) ? 'darwin' : 'win32');
 document.body.classList.add(platform === 'darwin' ? 'mac' : 'win');
 const keys = [
   'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
@@ -30,7 +30,7 @@ keySelect.value = 'a';
 
   function resizeToContent() {
     requestAnimationFrame(() => {
-      const h = document.documentElement.scrollHeight;
+      const h = document.body.scrollHeight + 24;
       window.auto.resize(h);
     });
   }
@@ -122,6 +122,7 @@ function toAccelerator(e) {
 }
 
 function captureHotkey(button, setter) {
+  window.auto.suspendHotkeys();
   const overlay = document.createElement('div');
   overlay.className = 'modal';
   overlay.innerHTML = '<div class="modal-content"><p>Press a key combination</p><button class="close-btn start-btn">Close</button></div>';
@@ -140,6 +141,10 @@ function captureHotkey(button, setter) {
     if (!accel) return;
     button.textContent = accel;
     setter(accel);
+    window.auto.getHotkeys().then(({ clickHotkey, keyHotkey }) => {
+      if (clickHotkey) clickHotkeyBtn.textContent = clickHotkey;
+      if (keyHotkey) keyHotkeyBtn.textContent = keyHotkey;
+    });
     cleanup();
   }
 
@@ -147,6 +152,7 @@ function captureHotkey(button, setter) {
     window.removeEventListener('keydown', handler, true);
     overlay.remove();
     document.body.classList.remove('modal-open');
+    window.auto.resumeHotkeys();
   }
 
   window.addEventListener('keydown', handler, true);
