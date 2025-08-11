@@ -93,8 +93,7 @@ if (window.auto) {
     } else {
       const key = document.getElementById('key').value;
       const interval = parseInt(document.getElementById('keyInterval').value, 10);
-      const mode = document.querySelector('input[name="keyMode"]:checked').value;
-      window.auto.startKeyPresser(key, interval, mode);
+      window.auto.startKeyPresser(key, interval);
     }
     toggleKeyBtn.classList.toggle('running', !running);
     toggleKeyBtn.textContent = running ? 'Start' : 'Stop';
@@ -131,16 +130,13 @@ async function captureHotkey(button, setter) {
   await window.auto.suspendHotkeys();
   const overlay = document.createElement('div');
   overlay.className = 'modal';
-  overlay.innerHTML = '<div class="modal-content"><p>Press a key combination</p><button type="button" class="close-btn start-btn">Close</button></div>';
+  overlay.innerHTML = '<div class="modal-content"><p>Press a key combination</p></div>';
   overlay.tabIndex = -1;
   document.body.appendChild(overlay);
   document.body.classList.add('modal-open');
   overlay.focus();
 
-  const closeBtn = overlay.querySelector('.close-btn');
-  closeBtn.addEventListener('click', cleanup);
-
-    async function handler(e) {
+  async function handler(e) {
     e.preventDefault();
     if (e.key === 'Escape') {
       cleanup();
@@ -156,15 +152,15 @@ async function captureHotkey(button, setter) {
     cleanup();
   }
 
-    let cleaned = false;
-    async function cleanup() {
-      if (cleaned) return;
-      cleaned = true;
-      window.removeEventListener('keydown', handler, true);
-      overlay.remove();
-      document.body.classList.remove('modal-open');
-      await window.auto.resumeHotkeys();
-    }
+  let cleaned = false;
+  async function cleanup() {
+    if (cleaned) return;
+    cleaned = true;
+    window.removeEventListener('keydown', handler, true);
+    overlay.remove();
+    document.body.classList.remove('modal-open');
+    await window.auto.resumeHotkeys();
+  }
 
   window.addEventListener('keydown', handler, true);
 }
