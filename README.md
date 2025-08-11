@@ -17,6 +17,7 @@ It showcases a modern design on each platform and provides global hotkeys to tog
 - Automation via prebuilt `@jitsi/robotjs`
 - Windows 11 Mica effect via `mica-electron`
 - Global hotkeys (F6 for clicker, F7 for key presser)
+- Custom macOS app icon via `images/AutoMancer.icns`
 
 ## Getting Started
 
@@ -36,6 +37,8 @@ If you manage versions with `nvm`, the project ships an `.nvmrc` file; run `nvm 
    ```bash
    npm run package
    ```
+
+For macOS, ensure `images/AutoMancer.icns` is present; the build process uses it for the application icon.
 
 ## Notes
 
