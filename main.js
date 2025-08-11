@@ -89,7 +89,7 @@ function toggleKeyPresser() {
 function createWindow() {
   win = new MicaBrowserWindow({
     width: 520,
-    height: 460,
+    height: 300,
     titleBarStyle: 'hidden',
     titleBarOverlay: { color: '#00000000', symbolColor: '#ffffff' },
     autoHideMenuBar: true,

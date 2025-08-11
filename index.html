@@ -30,6 +30,7 @@
       padding: 16px 24px 24px;
       display: grid;
       gap: 16px;
+      grid-template-columns: repeat(2, 1fr);
     }
     .card {
       background: var(--bg);
@@ -50,7 +51,7 @@
       margin-bottom: 8px;
       -webkit-app-region: no-drag;
     }
-    input {
+    input, select {
       flex: 1;
       background: rgba(255, 255, 255, 0.07);
       border: 1px solid var(--border);
@@ -58,7 +59,7 @@
       padding: 6px 8px;
       color: #fff;
     }
-    input:focus {
+    input:focus, select:focus {
       outline: 2px solid var(--accent);
     }
     .actions {
@@ -112,7 +113,7 @@
       <h2>Auto Key Presser</h2>
       <label>
         Key
-        <input id="key" type="text" value="a" />
+        <select id="key"></select>
       </label>
       <label>
         Interval (ms)
