@@ -39,11 +39,11 @@
       display: grid;
       gap: 16px;
       grid-template-columns: repeat(2, 1fr);
-      align-items: start;
+      align-items: stretch;
       box-sizing: border-box;
     }
     .card {
-      background: var(--bg);
+      background: linear-gradient(to bottom right, #D33818, #8c5cf3);
       backdrop-filter: blur(20px);
       border: 1px solid var(--border);
       border-radius: 12px;
@@ -64,6 +64,10 @@
 
     .icon {
       font-size: 1.2em;
+    }
+    .icon-img {
+      width: 1.2em;
+      height: 1.2em;
     }
     label {
       display: flex;
@@ -173,6 +177,13 @@
     button.running:hover {
       background: #991b1b;
     }
+    .start-btn,
+    .start-btn:hover,
+    .start-btn.running,
+    .start-btn.running:hover {
+      background: linear-gradient(to bottom right, #D33818, #8c5cf3);
+      border-color: var(--border);
+    }
     .modal {
       position: fixed;
       inset: 0;
@@ -201,7 +212,7 @@
   <header><img src="images/AutoMancer.png" alt="AutoMancer logo" />AutoMancer</header>
   <main>
     <section class="card">
-      <h2><span class="icon">🖱️</span>Auto Clicker</h2>
+      <h2><img src="images/cursor.png" alt="" class="icon-img" />Auto Clicker</h2>
       <label>
         Interval (ms)
         <input id="clickInterval" type="number" value="100" min="1" />
@@ -214,6 +225,10 @@
           <option value="right">right</option>
         </select>
       </label>
+      <label>
+        Toggle Hotkey
+        <button id="clickHotkeyBtn" class="hotkey-btn">F6</button>
+      </label>
       <label>Target</label>
       <select id="clickTarget">
         <option value="current">Current location</option>
@@ -224,16 +239,12 @@
         <input id="coordY" type="number" value="0" placeholder="Y" />
         <button id="pickCoord" class="icon-btn" title="Pick location">⌖</button>
       </div>
-      <label>
-        Toggle Hotkey
-        <button id="clickHotkeyBtn" class="hotkey-btn">F6</button>
-      </label>
       <div class="actions">
-        <button id="toggleClicker">Start</button>
+        <button id="toggleClicker" class="start-btn">Start</button>
       </div>
     </section>
     <section class="card">
-      <h2><span class="icon">⌨️</span>Auto Key Presser</h2>
+      <h2><img src="images/keyboard.png" alt="" class="icon-img" />Auto Key Presser</h2>
       <label>
         Key
         <select id="key"></select>
@@ -247,7 +258,7 @@
         <button id="keyHotkeyBtn" class="hotkey-btn">F7</button>
       </label>
     <div class="actions">
-      <button id="toggleKey">Start</button>
+      <button id="toggleKey" class="start-btn">Start</button>
     </div>
     </section>
   </main>
