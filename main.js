@@ -62,12 +62,15 @@ function startClicker(config) {
     clickButton = config.button || clickButton;
     clickTarget = config.target || clickTarget;
   }
+  if (!robot) {
+    robot = require('@jitsi/robotjs');
+  }
+  if (clickTarget.type === 'coords') {
+    robot.moveMouse(clickTarget.x, clickTarget.y);
+  }
   clickIntervalId = setInterval(() => {
     if (!robot) {
       robot = require('@jitsi/robotjs');
-    }
-    if (clickTarget.type === 'coords') {
-      robot.moveMouse(clickTarget.x, clickTarget.y);
     }
     robot.mouseClick(clickButton);
     if (clickTarget.type === 'coords') {
