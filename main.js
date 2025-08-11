@@ -303,8 +303,12 @@ app.on('will-quit', () => {
   ipcMain.on('stop-clicker', stopClicker);
   ipcMain.on('start-key', (e, data) => startKeyPresser(data.key, data.interval, data.mode));
   ipcMain.on('stop-key', stopKeyPresser);
-  ipcMain.on('set-click-hotkey', (e, accelerator) => registerClickHotkey(accelerator));
-  ipcMain.on('set-key-hotkey', (e, accelerator) => registerKeyHotkey(accelerator));
+  ipcMain.handle('set-click-hotkey', (e, accelerator) => {
+    registerClickHotkey(accelerator);
+  });
+  ipcMain.handle('set-key-hotkey', (e, accelerator) => {
+    registerKeyHotkey(accelerator);
+  });
   ipcMain.handle('get-hotkeys', () => ({ clickHotkey, keyHotkey }));
   ipcMain.handle('pick-point', () => pickPoint());
   ipcMain.on('resize-window', (e, height) => {

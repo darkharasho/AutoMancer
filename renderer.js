@@ -30,7 +30,7 @@ keySelect.value = 'a';
 
   function resizeToContent() {
     requestAnimationFrame(() => {
-      const h = document.body.scrollHeight + 24;
+      const h = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight) + 32;
       window.auto.resize(h);
     });
   }
@@ -126,25 +126,28 @@ function captureHotkey(button, setter) {
   const overlay = document.createElement('div');
   overlay.className = 'modal';
   overlay.innerHTML = '<div class="modal-content"><p>Press a key combination</p><button class="close-btn start-btn">Close</button></div>';
+  overlay.tabIndex = -1;
   document.body.appendChild(overlay);
   document.body.classList.add('modal-open');
+  overlay.focus();
 
   const closeBtn = overlay.querySelector('.close-btn');
-  closeBtn.addEventListener('click', () => {
-    cleanup();
-  });
+  closeBtn.addEventListener('click', cleanup);
 
-  function handler(e) {
+  async function handler(e) {
     e.preventDefault();
+    if (e.key === 'Escape') {
+      cleanup();
+      return;
+    }
     if (['Shift','Control','Alt','Meta'].includes(e.key)) return;
     const accel = toAccelerator(e);
     if (!accel) return;
     button.textContent = accel;
-    setter(accel);
-    window.auto.getHotkeys().then(({ clickHotkey, keyHotkey }) => {
-      if (clickHotkey) clickHotkeyBtn.textContent = clickHotkey;
-      if (keyHotkey) keyHotkeyBtn.textContent = keyHotkey;
-    });
+    await setter(accel);
+    const { clickHotkey, keyHotkey } = await window.auto.getHotkeys();
+    if (clickHotkey) clickHotkeyBtn.textContent = clickHotkey;
+    if (keyHotkey) keyHotkeyBtn.textContent = keyHotkey;
     cleanup();
   }
 
