@@ -19,7 +19,7 @@ keys.forEach(k => {
   keySelect.appendChild(opt);
 });
 keySelect.value = 'a';
-
+if (window.auto) {
   const clickButtonSel = document.getElementById('clickButton');
   const clickTargetSel = document.getElementById('clickTarget');
   const coordFields = document.getElementById('coordFields');
@@ -30,8 +30,10 @@ keySelect.value = 'a';
 
   function resizeToContent() {
     requestAnimationFrame(() => {
-      const h = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight) + 32;
-      window.auto.resize(h);
+      setTimeout(() => {
+        const h = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+        window.auto.resize(h);
+      }, 0);
     });
   }
 
@@ -79,33 +81,37 @@ keySelect.value = 'a';
     } else {
       window.auto.startClicker(getClickConfig());
     }
+    toggleClickerBtn.classList.toggle('running', !running);
+    toggleClickerBtn.textContent = running ? 'Start' : 'Stop';
   });
 
-const toggleKeyBtn = document.getElementById('toggleKey');
-toggleKeyBtn.addEventListener('click', () => {
-  const running = toggleKeyBtn.classList.contains('running');
-  if (running) {
-    window.auto.stopKeyPresser();
-  } else {
-    const key = document.getElementById('key').value;
-    const interval = parseInt(document.getElementById('keyInterval').value, 10);
-    const mode = document.querySelector('input[name="keyMode"]:checked').value;
-    window.auto.startKeyPresser(key, interval, mode);
-  }
-});
+  const toggleKeyBtn = document.getElementById('toggleKey');
+  toggleKeyBtn.addEventListener('click', () => {
+    const running = toggleKeyBtn.classList.contains('running');
+    if (running) {
+      window.auto.stopKeyPresser();
+    } else {
+      const key = document.getElementById('key').value;
+      const interval = parseInt(document.getElementById('keyInterval').value, 10);
+      const mode = document.querySelector('input[name="keyMode"]:checked').value;
+      window.auto.startKeyPresser(key, interval, mode);
+    }
+    toggleKeyBtn.classList.toggle('running', !running);
+    toggleKeyBtn.textContent = running ? 'Start' : 'Stop';
+  });
 
-window.auto.onClickerToggled((state) => {
-  toggleClickerBtn.textContent = state ? 'Stop' : 'Start';
-  toggleClickerBtn.classList.toggle('running', state);
-});
+  window.auto.onClickerToggled((state) => {
+    toggleClickerBtn.textContent = state ? 'Stop' : 'Start';
+    toggleClickerBtn.classList.toggle('running', state);
+  });
 
-window.auto.onKeyToggled((state) => {
-  toggleKeyBtn.textContent = state ? 'Stop' : 'Start';
-  toggleKeyBtn.classList.toggle('running', state);
-});
+  window.auto.onKeyToggled((state) => {
+    toggleKeyBtn.textContent = state ? 'Stop' : 'Start';
+    toggleKeyBtn.classList.toggle('running', state);
+  });
 
-function toAccelerator(e) {
-  const parts = [];
+  function toAccelerator(e) {
+    const parts = [];
   if (e.ctrlKey) parts.push('Ctrl');
   if (e.shiftKey) parts.push('Shift');
   if (e.altKey) parts.push('Alt');
@@ -163,16 +169,17 @@ async function captureHotkey(button, setter) {
   window.addEventListener('keydown', handler, true);
 }
 
-const clickHotkeyBtn = document.getElementById('clickHotkeyBtn');
-clickHotkeyBtn.addEventListener('click', () => captureHotkey(clickHotkeyBtn, window.auto.setClickHotkey));
+  const clickHotkeyBtn = document.getElementById('clickHotkeyBtn');
+  clickHotkeyBtn.addEventListener('click', () => captureHotkey(clickHotkeyBtn, window.auto.setClickHotkey));
 
-const keyHotkeyBtn = document.getElementById('keyHotkeyBtn');
-keyHotkeyBtn.addEventListener('click', () => captureHotkey(keyHotkeyBtn, window.auto.setKeyHotkey));
+  const keyHotkeyBtn = document.getElementById('keyHotkeyBtn');
+  keyHotkeyBtn.addEventListener('click', () => captureHotkey(keyHotkeyBtn, window.auto.setKeyHotkey));
 
-window.auto.getHotkeys().then(({ clickHotkey, keyHotkey }) => {
-  if (clickHotkey) clickHotkeyBtn.textContent = clickHotkey;
-  if (keyHotkey) keyHotkeyBtn.textContent = keyHotkey;
-  resizeToContent();
-});
+  window.auto.getHotkeys().then(({ clickHotkey, keyHotkey }) => {
+    if (clickHotkey) clickHotkeyBtn.textContent = clickHotkey;
+    if (keyHotkey) keyHotkeyBtn.textContent = keyHotkey;
+    resizeToContent();
+  });
 
-sendClickConfig();
+  sendClickConfig();
+}

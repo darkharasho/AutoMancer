@@ -5,7 +5,12 @@ const path = require('path');
 let appVersion = '';
 try {
   appVersion = fs.readFileSync(path.join(__dirname, 'version.txt'), 'utf8').trim();
-} catch {}
+} catch {
+  try {
+    const pkg = JSON.parse(fs.readFileSync(path.join(__dirname, 'package.json'), 'utf8'));
+    appVersion = pkg.version || '';
+  } catch {}
+}
 
 contextBridge.exposeInMainWorld('env', { platform: process.platform });
 contextBridge.exposeInMainWorld('appVersion', appVersion);
