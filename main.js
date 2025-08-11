@@ -208,14 +208,15 @@ function createWindow() {
     'images',
     isMac ? 'AutoMancer.icns' : isWin ? 'AutoMancer.ico' : 'AutoMancer.png'
   );
+  const icon = nativeImage.createFromPath(iconPath);
   if (isMac) {
-    app.dock.setIcon(nativeImage.createFromPath(iconPath));
+    app.dock.setIcon(icon);
   }
   const WindowClass = isWin ? MicaBrowserWindow : BrowserWindow;
   win = new WindowClass({
     width: 640,
     height: 360,
-    icon: iconPath,
+    icon,
     titleBarStyle: 'hidden',
     titleBarOverlay: { color: '#00000000', symbolColor: '#ffffff' },
     autoHideMenuBar: true,
@@ -229,6 +230,9 @@ function createWindow() {
       nodeIntegration: false
     }
   });
+  if (typeof win.setIcon === 'function') {
+    win.setIcon(icon);
+  }
 
   win.loadFile(path.join(__dirname, 'index.html'));
   win.once('ready-to-show', () => {
