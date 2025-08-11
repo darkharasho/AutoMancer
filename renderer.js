@@ -19,7 +19,12 @@ keys.forEach(k => {
   keySelect.appendChild(opt);
 });
 keySelect.value = 'a';
-if (window.auto) {
+function init() {
+  if (!window.auto) {
+    setTimeout(init, 50);
+    return;
+  }
+
   const clickButtonSel = document.getElementById('clickButton');
   const clickTargetSel = document.getElementById('clickTarget');
   const coordFields = document.getElementById('coordFields');
@@ -179,3 +184,5 @@ async function captureHotkey(button, setter) {
 
   sendClickConfig();
 }
+
+init();
