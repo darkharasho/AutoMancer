@@ -125,7 +125,7 @@ async function captureHotkey(button, setter) {
   await window.auto.suspendHotkeys();
   const overlay = document.createElement('div');
   overlay.className = 'modal';
-  overlay.innerHTML = '<div class="modal-content"><p>Press a key combination</p><button class="close-btn start-btn">Close</button></div>';
+  overlay.innerHTML = '<div class="modal-content"><p>Press a key combination</p><button type="button" class="close-btn start-btn">Close</button></div>';
   overlay.tabIndex = -1;
   document.body.appendChild(overlay);
   document.body.classList.add('modal-open');
@@ -134,7 +134,7 @@ async function captureHotkey(button, setter) {
   const closeBtn = overlay.querySelector('.close-btn');
   closeBtn.addEventListener('click', cleanup);
 
-  async function handler(e) {
+    async function handler(e) {
     e.preventDefault();
     if (e.key === 'Escape') {
       cleanup();
@@ -150,12 +150,15 @@ async function captureHotkey(button, setter) {
     cleanup();
   }
 
-  async function cleanup() {
-    window.removeEventListener('keydown', handler, true);
-    overlay.remove();
-    document.body.classList.remove('modal-open');
-    await window.auto.resumeHotkeys();
-  }
+    let cleaned = false;
+    async function cleanup() {
+      if (cleaned) return;
+      cleaned = true;
+      window.removeEventListener('keydown', handler, true);
+      overlay.remove();
+      document.body.classList.remove('modal-open');
+      await window.auto.resumeHotkeys();
+    }
 
   window.addEventListener('keydown', handler, true);
 }
