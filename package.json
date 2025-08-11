@@ -5,7 +5,9 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "package": "electron-packager . AutoMancer --platform=win32 --arch=x64 --out=dist --overwrite",
+    "package:win": "electron-packager . AutoMancer --platform=win32 --arch=x64 --icon=images/AutoMancer.ico --out=dist --overwrite",
+    "package:mac": "electron-packager . AutoMancer --platform=darwin --arch=x64 --icon=images/AutoMancer.icns --out=dist --overwrite",
+    "package": "npm run package:win && npm run package:mac",
     "test": "echo \"No tests specified\""
   },
   "dependencies": {
