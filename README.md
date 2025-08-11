@@ -13,7 +13,9 @@ Automation is powered by the `@jitsi/robotjs` library, which ships prebuilt bina
 
 ## Getting Started
 
-Ensure you have **Node.js 18 or newer** installed.
+Use **Node.js 18 or 20** with **npm 9+**. Newer releases such as Node 22 are currently unsupported and may fail during dependency installation.
+
+If you manage versions with `nvm`, the project ships an `.nvmrc` file; run `nvm use` to switch to the recommended Node version.
 
 1. Install dependencies
    ```bash
