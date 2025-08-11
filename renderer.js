@@ -23,15 +23,34 @@ keySelect.value = 'a';
   const coordX = document.getElementById('coordX');
   const coordY = document.getElementById('coordY');
   const pickCoordBtn = document.getElementById('pickCoord');
+  const clickIntervalInput = document.getElementById('clickInterval');
 
   function resizeToContent() {
     const h = document.documentElement.scrollHeight;
     window.auto.resize(h);
   }
 
+  function getClickConfig() {
+    const interval = parseInt(clickIntervalInput.value, 10);
+    const button = clickButtonSel.value;
+    const target = clickTargetSel.value === 'coords'
+      ? { type: 'coords', x: parseInt(coordX.value, 10), y: parseInt(coordY.value, 10) }
+      : { type: 'current' };
+    return {
+      interval: Number.isFinite(interval) ? interval : 0,
+      button,
+      target
+    };
+  }
+
+  function sendClickConfig() {
+    window.auto.updateClickConfig(getClickConfig());
+  }
+
   clickTargetSel.addEventListener('change', () => {
     coordFields.style.display = clickTargetSel.value === 'coords' ? 'flex' : 'none';
     resizeToContent();
+    sendClickConfig();
   });
 
   pickCoordBtn.addEventListener('click', async () => {
@@ -39,7 +58,12 @@ keySelect.value = 'a';
     if (point) {
       coordX.value = point.x;
       coordY.value = point.y;
+      sendClickConfig();
     }
+  });
+
+  [clickIntervalInput, clickButtonSel, coordX, coordY].forEach(el => {
+    el.addEventListener('change', sendClickConfig);
   });
 
   const toggleClickerBtn = document.getElementById('toggleClicker');
@@ -48,12 +72,7 @@ keySelect.value = 'a';
     if (running) {
       window.auto.stopClicker();
     } else {
-      const interval = parseInt(document.getElementById('clickInterval').value, 10);
-      const button = clickButtonSel.value;
-      const target = clickTargetSel.value === 'coords'
-        ? { type: 'coords', x: parseInt(coordX.value, 10), y: parseInt(coordY.value, 10) }
-        : { type: 'current' };
-      window.auto.startClicker({ interval, button, target });
+      window.auto.startClicker(getClickConfig());
     }
   });
 
@@ -133,3 +152,5 @@ window.auto.getHotkeys().then(({ clickHotkey, keyHotkey }) => {
   if (keyHotkey) keyHotkeyBtn.textContent = keyHotkey;
   resizeToContent();
 });
+
+sendClickConfig();

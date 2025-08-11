@@ -263,3 +263,11 @@ app.on('will-quit', () => {
       win.setContentSize(w, Math.round(height));
     }
   });
+
+  ipcMain.on('update-click-config', (e, config) => {
+    if (config) {
+      if (Number.isFinite(config.interval)) clickInterval = config.interval;
+      if (config.button) clickButton = config.button;
+      if (config.target) clickTarget = config.target;
+    }
+  });
