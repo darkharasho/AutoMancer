@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>AutoMancer</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: rgba(255, 255, 255, 0.05);
+      --border: rgba(255, 255, 255, 0.1);
+      --hover: rgba(255, 255, 255, 0.12);
+      --accent: #2563eb;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      color: #fff;
+      /* Slight tint so clicks outside cards don't fall through */
+      background: rgba(0, 0, 0, 0.01);
+    }
+    header {
+      height: 32px;
+      padding: 0 12px;
+      display: flex;
+      align-items: center;
+      -webkit-app-region: drag;
+      font-weight: 500;
+    }
+    main {
+      padding: 16px 24px 24px;
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .card {
+      background: var(--bg);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+    }
+    h1, h2 {
+      margin: 0 0 12px;
+      font-weight: 600;
+      font-size: 18px;
+    }
+    h2 {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .icon {
+      font-size: 1.2em;
+    }
+    label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      -webkit-app-region: no-drag;
+    }
+    input[type="number"], select {
+      width: 100px;
+      flex: 0 0 100px;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 8px;
+      color: #fff;
+    }
+
+    .hotkey-btn {
+      flex: 1;
+      text-align: left;
+    }
+
+    /* Modern dark-themed dropdown */
+    select {
+      appearance: none;
+      -webkit-appearance: none;
+      padding-right: 24px;
+      background-image: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="%23ffffff"><path d="M2 4l4 4 4-4"/></svg>');
+      background-repeat: no-repeat;
+      background-position: right 8px center;
+      background-size: 12px;
+    }
+
+    select option {
+      background-color: #1f1f1f;
+      color: #fff;
+    }
+    input:focus, select:focus {
+      outline: 2px solid var(--accent);
+    }
+    .actions {
+      display: flex;
+      align-items: center;
+      margin-top: 8px;
+      -webkit-app-region: no-drag;
+    }
+    button {
+      flex: 0 0 auto;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 12px;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background: var(--hover);
+    }
+    button.running {
+      background: #166534;
+      border-color: #16a34a;
+    }
+    button.running:hover {
+      background: #15803d;
+    }
+    .modal {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.4);
+    }
+
+    .modal-content {
+      background: var(--bg);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px 32px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <header>AutoMancer</header>
+  <main>
+    <section class="card">
+      <h2><span class="icon">🖱️</span>Auto Clicker</h2>
+      <label>
+        Interval (ms)
+        <input id="clickInterval" type="number" value="100" min="1" />
+      </label>
+      <label>
+        Toggle Hotkey
+        <button id="clickHotkeyBtn" class="hotkey-btn">F6</button>
+      </label>
+      <div class="actions">
+        <button id="toggleClicker">Start</button>
+      </div>
+    </section>
+    <section class="card">
+      <h2><span class="icon">⌨️</span>Auto Key Presser</h2>
+      <label>
+        Key
+        <select id="key"></select>
+      </label>
+      <label>
+        Interval (ms)
+        <input id="keyInterval" type="number" value="100" min="1" />
+      </label>
+      <label>
+        Toggle Hotkey
+        <button id="keyHotkeyBtn" class="hotkey-btn">F7</button>
+      </label>
+    <div class="actions">
+      <button id="toggleKey">Start</button>
+    </div>
+    </section>
+  </main>
+  <script src="renderer.js"></script>
+</body>
+</html>
