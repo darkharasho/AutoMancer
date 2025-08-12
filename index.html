@@ -22,6 +22,15 @@
       background: rgba(0, 0, 0, 0.01);
       user-select: none;
     }
+
+    html, body {
+      height: 100%;
+    }
+
+      html.win32, body.win32 {
+        border-radius: 12px;
+        overflow: hidden;
+      }
     header {
       height: 32px;
       padding: 0 12px;
@@ -43,11 +52,11 @@
       box-sizing: border-box;
     }
     .card {
-      background: var(--bg);
       backdrop-filter: blur(20px);
+      background: var(--bg);
       border: 2px solid transparent;
       border-image: linear-gradient(to bottom right, #D33818, #8c5cf3) 1;
-      border-radius: 12px;
+      border-radius: 16px;
       padding: 16px;
       display: flex;
       flex-direction: column;
@@ -154,28 +163,30 @@
     }
     .actions button {
       width: var(--field-width);
+      border-radius: 8px;
       border: 2px solid transparent;
       border-image: linear-gradient(to bottom right, #D33818, #8c5cf3) 1;
     }
     button {
       flex: 0 0 auto;
-      background: rgba(255, 255, 255, 0.07);
+      background-color: rgba(255, 255, 255, 0.07);
       border: 1px solid var(--border);
       border-radius: 6px;
       padding: 6px 12px;
       color: #fff;
       cursor: pointer;
-      transition: background 0.2s;
+      transition: background-color 0.2s;
     }
     button:hover {
-      background: var(--hover);
+      background-color: var(--hover);
     }
     button.running {
-      background: #7f1d1d;
+      background-color: #7f1d1d;
       border-color: #dc2626;
+      border-image: none;
     }
     button.running:hover {
-      background: #991b1b;
+      background-color: #991b1b;
     }
     .modal {
       position: fixed;

@@ -213,23 +213,26 @@ function createWindow() {
     app.dock.setIcon(icon);
   }
   const WindowClass = isWin ? MicaBrowserWindow : BrowserWindow;
-  win = new WindowClass({
+  const windowOpts = {
     width: 640,
     height: 360,
     icon,
     titleBarStyle: 'hidden',
     titleBarOverlay: { color: '#00000000', symbolColor: '#ffffff' },
     autoHideMenuBar: true,
-    backgroundColor: '#01000000',
     show: false,
     alwaysOnTop: true,
+    ...(isWin
+      ? { frame: false, transparent: true, roundedCorners: true, backgroundColor: '#00000000' }
+      : { backgroundColor: '#01000000' }),
     ...(isMac ? { vibrancy: 'under-window', visualEffectState: 'active' } : {}),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
       nodeIntegration: false
     }
-  });
+  };
+  win = new WindowClass(windowOpts);
   if (typeof win.setIcon === 'function') {
     win.setIcon(icon);
   }
@@ -241,6 +244,15 @@ function createWindow() {
       win.setMicaEffect();
     }
     win.show();
+    if (isWin && typeof win.setRoundedCorners === 'function') {
+      win.setRoundedCorners(true);
+    }
+    // --- Force a tiny resize to trigger Mica ---
+    setTimeout(() => {
+      const [w, h] = win.getSize();
+      win.setSize(w, h + 1);
+      setTimeout(() => win.setSize(w, h), 10);
+    }, 100);
   });
   win.on('closed', () => {
     win = null;
@@ -270,12 +282,12 @@ app.on('will-quit', () => {
   ipcMain.on('set-key-hotkey', (e, accelerator) => registerKeyHotkey(accelerator));
   ipcMain.handle('get-hotkeys', () => ({ clickHotkey, keyHotkey }));
   ipcMain.handle('pick-point', () => pickPoint());
-  ipcMain.on('resize-window', (e, height) => {
-    if (win && !win.isDestroyed()) {
-      const [w] = win.getContentSize();
-      win.setContentSize(w, Math.round(height));
-    }
-  });
+  // ipcMain.on('resize-window', (e, height) => {
+  //   if (win && !win.isDestroyed()) {
+  //     const [w] = win.getContentSize();
+  //     win.setContentSize(w, Math.round(height));
+  //   }
+  // });
 
   ipcMain.on('update-click-config', (e, config) => {
     if (config) {
@@ -284,3 +296,10 @@ app.on('will-quit', () => {
       if (config.target) clickTarget = config.target;
     }
   });
+ipcMain.handle('resize', (event, height) => {
+  const win = BrowserWindow.fromWebContents(event.sender);
+  if (win) {
+    const [width] = win.getContentSize();
+    win.setContentSize(width, Math.round(height) + 8);
+  }
+});

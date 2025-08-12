@@ -1,6 +1,11 @@
 const keySelect = document.getElementById('key');
 const header = document.querySelector('header');
-if (window.env && window.env.platform === 'darwin') {
+const platform = window.env && window.env.platform;
+if (platform) {
+  document.body.classList.add(platform);
+  document.documentElement.classList.add(platform);
+}
+if (platform === 'darwin') {
   header.style.justifyContent = 'flex-end';
 } else {
   header.style.justifyContent = 'flex-start';
@@ -28,10 +33,16 @@ keySelect.value = 'a';
   const pickCoordBtn = document.getElementById('pickCoord');
   const clickIntervalInput = document.getElementById('clickInterval');
 
+  let lastHeight = 0;
   function resizeToContent() {
     const h = document.documentElement.scrollHeight;
-    window.auto.resize(h);
+    if (h !== lastHeight) {
+      lastHeight = h;
+      window.auto.resize(h);
+    }
   }
+  const ro = new ResizeObserver(() => resizeToContent());
+  ro.observe(document.querySelector('main'));
 
   function getClickConfig() {
     const interval = parseInt(clickIntervalInput.value, 10);
@@ -52,7 +63,15 @@ keySelect.value = 'a';
 
   clickTargetSel.addEventListener('change', () => {
     coordFields.style.display = clickTargetSel.value === 'coords' ? 'flex' : 'none';
-    resizeToContent();
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        if (clickTargetSel.value !== 'coords') {
+          window.auto.resize(360); // Force original height
+        } else {
+          resizeToContent();
+        }
+      });
+    });
     sendClickConfig();
   });
 
