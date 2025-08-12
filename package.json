@@ -6,7 +6,11 @@
   "author": "AutoMancer",
   "scripts": {
     "start": "electron .",
-    "dist": "CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder",
+    "package:win": "electron-packager . AutoMancer --platform=win32 --arch=x64 --icon=images/AutoMancer.ico --out=dist --overwrite",
+    "package:mac": "electron-packager . AutoMancer --platform=darwin --arch=x64 --icon=images/AutoMancer.icns --out=dist --overwrite",
+    "package": "npm run package:win && npm run package:mac",
+    "dist:win": "cross-env CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --win",
+    "dist:mac": "cross-env CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac",
     "test": "echo \"No tests specified\""
   },
   "dependencies": {
@@ -15,7 +19,9 @@
   },
   "devDependencies": {
     "electron-builder": "^24.9.1",
-    "electron": "^37.2.6"
+    "electron": "^37.2.6",
+    "electron-packager": "^17.1.1",
+    "cross-env": "^7.0.3"
   },
   "engines": {
     "node": ">=18 <19",
