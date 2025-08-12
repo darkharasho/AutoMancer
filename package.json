@@ -9,7 +9,7 @@
     "package:win": "electron-packager . AutoMancer --platform=win32 --arch=x64 --icon=images/AutoMancer.ico --out=dist --overwrite",
     "package:mac": "electron-packager . AutoMancer --platform=darwin --arch=x64 --icon=images/AutoMancer.icns --out=dist --overwrite",
     "package": "npm run package:win && npm run package:mac",
-    "dist": "electron-builder --win --mac",
+    "dist": "electron-builder",
     "test": "echo \"No tests specified\""
   },
   "dependencies": {
