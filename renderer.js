@@ -54,7 +54,7 @@ keySelect.value = 'a';
       : { type: 'current' };
     return {
       interval: Number.isFinite(interval) ? interval : 0,
-      jitter: Number.isFinite(jitter) ? jitter : 0,
+      jitter: Number.isFinite(jitter) ? Math.max(0, jitter) : 0,
       button,
       target
     };

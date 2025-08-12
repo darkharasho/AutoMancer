@@ -60,7 +60,7 @@ function startClicker(config) {
   stopClicker();
   if (config) {
     clickInterval = config.interval || clickInterval;
-    clickJitter = Number.isFinite(config.jitter) ? config.jitter : clickJitter;
+    clickJitter = Number.isFinite(config.jitter) ? Math.max(0, config.jitter) : clickJitter;
     clickButton = config.button || clickButton;
     clickTarget = config.target || clickTarget;
   }
@@ -71,7 +71,7 @@ function startClicker(config) {
     robot.moveMouse(clickTarget.x, clickTarget.y);
   }
   const scheduleClick = () => {
-    const extra = clickJitter > 0 ? Math.floor(Math.random() * clickJitter) + 1 : 0;
+    const extra = Math.floor(Math.random() * (clickJitter + 1));
     const delay = clickInterval + extra;
     clickIntervalId = setTimeout(() => {
       if (!robot) {
@@ -300,7 +300,7 @@ app.on('will-quit', () => {
   ipcMain.on('update-click-config', (e, config) => {
     if (config) {
       if (Number.isFinite(config.interval)) clickInterval = config.interval;
-      if (Number.isFinite(config.jitter)) clickJitter = config.jitter;
+      if (Number.isFinite(config.jitter)) clickJitter = Math.max(0, config.jitter);
       if (config.button) clickButton = config.button;
       if (config.target) clickTarget = config.target;
     }
