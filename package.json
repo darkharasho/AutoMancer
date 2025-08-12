@@ -10,7 +10,7 @@
     "package:mac": "electron-packager . AutoMancer --platform=darwin --arch=x64 --icon=images/AutoMancer.icns --out=dist --overwrite",
     "package": "npm run package:win && npm run package:mac",
     "dist:win": "cross-env CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --win",
-    "dist:mac": "cross-env CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac",
+    "dist:mac": "cross-env CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac && xattr -cr dist/mac/AutoMancer.app",
     "test": "echo \"No tests specified\""
   },
   "dependencies": {
@@ -35,7 +35,9 @@
     ],
     "mac": {
       "target": "dmg",
-      "icon": "images/AutoMancer.icns"
+      "icon": "images/AutoMancer.icns",
+      "identity": null,
+      "gatekeeperAssess": false
     },
     "win": {
       "target": "nsis",

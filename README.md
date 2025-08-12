@@ -55,6 +55,7 @@ If you manage versions with `nvm`, the project ships an `.nvmrc` file; run `nvm 
 
 If you encounter the error `Electron failed to install correctly`, remove the `node_modules` folder and rerun `npm install`.
 If Electron logs repeated GPU process crashes, start the app with `AUTOMANCER_DISABLE_GPU=1 npm start` and ensure your GPU drivers are up to date.
+If macOS warns that "AutoMancer is damaged and can't be opened," the `dist:mac` script now removes the quarantine attribute automatically. For an existing copy, run `xattr -cr /Applications/AutoMancer.app` to clear the attribute manually.
 
 ## License
 
