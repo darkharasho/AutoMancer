@@ -247,6 +247,12 @@ function createWindow() {
     if (isWin && typeof win.setRoundedCorners === 'function') {
       win.setRoundedCorners(true);
     }
+    // --- Force a tiny resize to trigger Mica ---
+    setTimeout(() => {
+      const [w, h] = win.getSize();
+      win.setSize(w, h + 1);
+      setTimeout(() => win.setSize(w, h), 10);
+    }, 100);
   });
   win.on('closed', () => {
     win = null;
@@ -276,12 +282,12 @@ app.on('will-quit', () => {
   ipcMain.on('set-key-hotkey', (e, accelerator) => registerKeyHotkey(accelerator));
   ipcMain.handle('get-hotkeys', () => ({ clickHotkey, keyHotkey }));
   ipcMain.handle('pick-point', () => pickPoint());
-  ipcMain.on('resize-window', (e, height) => {
-    if (win && !win.isDestroyed()) {
-      const [w] = win.getContentSize();
-      win.setContentSize(w, Math.round(height));
-    }
-  });
+  // ipcMain.on('resize-window', (e, height) => {
+  //   if (win && !win.isDestroyed()) {
+  //     const [w] = win.getContentSize();
+  //     win.setContentSize(w, Math.round(height));
+  //   }
+  // });
 
   ipcMain.on('update-click-config', (e, config) => {
     if (config) {
@@ -290,3 +296,10 @@ app.on('will-quit', () => {
       if (config.target) clickTarget = config.target;
     }
   });
+ipcMain.handle('resize', (event, height) => {
+  const win = BrowserWindow.fromWebContents(event.sender);
+  if (win) {
+    const [width] = win.getContentSize();
+    win.setContentSize(width, Math.round(height) + 8);
+  }
+});

@@ -63,7 +63,15 @@ keySelect.value = 'a';
 
   clickTargetSel.addEventListener('change', () => {
     coordFields.style.display = clickTargetSel.value === 'coords' ? 'flex' : 'none';
-    resizeToContent();
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        if (clickTargetSel.value !== 'coords') {
+          window.auto.resize(360); // Force original height
+        } else {
+          resizeToContent();
+        }
+      });
+    });
     sendClickConfig();
   });
 
