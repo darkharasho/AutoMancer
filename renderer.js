@@ -32,6 +32,7 @@ keySelect.value = 'a';
   const coordY = document.getElementById('coordY');
   const pickCoordBtn = document.getElementById('pickCoord');
   const clickIntervalInput = document.getElementById('clickInterval');
+  const clickJitterInput = document.getElementById('clickJitter');
 
   let lastHeight = 0;
   function resizeToContent() {
@@ -46,12 +47,14 @@ keySelect.value = 'a';
 
   function getClickConfig() {
     const interval = parseInt(clickIntervalInput.value, 10);
+    const jitter = parseInt(clickJitterInput.value, 10);
     const button = clickButtonSel.value;
     const target = clickTargetSel.value === 'coords'
       ? { type: 'coords', x: parseInt(coordX.value, 10), y: parseInt(coordY.value, 10) }
       : { type: 'current' };
     return {
       interval: Number.isFinite(interval) ? interval : 0,
+      jitter: Number.isFinite(jitter) ? jitter : 0,
       button,
       target
     };
@@ -84,7 +87,7 @@ keySelect.value = 'a';
     }
   });
 
-  [clickIntervalInput, clickButtonSel, coordX, coordY].forEach(el => {
+  [clickIntervalInput, clickJitterInput, clickButtonSel, coordX, coordY].forEach(el => {
     el.addEventListener('change', sendClickConfig);
   });
 

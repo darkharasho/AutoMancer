@@ -15,6 +15,7 @@ let clickIntervalId = null;
 let keyIntervalId = null;
 let currentKey = 'a';
 let clickInterval = 100; // default 100ms
+let clickJitter = 0; // default 0ms jitter
 let keyInterval = 100; // default 100ms
 let clickButton = 'left';
 let clickTarget = { type: 'current' };
@@ -59,6 +60,7 @@ function startClicker(config) {
   stopClicker();
   if (config) {
     clickInterval = config.interval || clickInterval;
+    clickJitter = Number.isFinite(config.jitter) ? config.jitter : clickJitter;
     clickButton = config.button || clickButton;
     clickTarget = config.target || clickTarget;
   }
@@ -68,21 +70,27 @@ function startClicker(config) {
   if (clickTarget.type === 'coords') {
     robot.moveMouse(clickTarget.x, clickTarget.y);
   }
-  clickIntervalId = setInterval(() => {
-    if (!robot) {
-      robot = require('@jitsi/robotjs');
-    }
-    robot.mouseClick(clickButton);
-    if (clickTarget.type === 'coords') {
-      robot.moveMouse(clickTarget.x, clickTarget.y);
-    }
-  }, clickInterval);
+  const scheduleClick = () => {
+    const extra = clickJitter > 0 ? Math.floor(Math.random() * clickJitter) + 1 : 0;
+    const delay = clickInterval + extra;
+    clickIntervalId = setTimeout(() => {
+      if (!robot) {
+        robot = require('@jitsi/robotjs');
+      }
+      robot.mouseClick(clickButton);
+      if (clickTarget.type === 'coords') {
+        robot.moveMouse(clickTarget.x, clickTarget.y);
+      }
+      scheduleClick();
+    }, delay);
+  };
+  scheduleClick();
   notifyClickerState();
 }
 
 function stopClicker() {
   if (clickIntervalId) {
-    clearInterval(clickIntervalId);
+    clearTimeout(clickIntervalId);
     clickIntervalId = null;
   }
   notifyClickerState();
@@ -292,6 +300,7 @@ app.on('will-quit', () => {
   ipcMain.on('update-click-config', (e, config) => {
     if (config) {
       if (Number.isFinite(config.interval)) clickInterval = config.interval;
+      if (Number.isFinite(config.jitter)) clickJitter = config.jitter;
       if (config.button) clickButton = config.button;
       if (config.target) clickTarget = config.target;
     }
