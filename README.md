@@ -47,6 +47,11 @@ If you manage versions with `nvm`, the project ships an `.nvmrc` file; run `nvm 
    Run the command appropriate for your host OS. DMG installers must be built on macOS.
    Windows builds may require Administrator rights or Developer Mode to allow symlink creation during extraction.
 
+5. Uninstall the app
+   - **Windows:** the NSIS installer creates `Uninstall AutoMancer.exe` in the installation directory and registers it with "Add or Remove Programs".
+     Running it removes the application and its configuration data.
+   - **macOS/Linux:** delete the application bundle and remove the config directory (`~/Library/Application Support/AutoMancer` on macOS or `~/.config/AutoMancer` on Linux).
+
 ## Notes
 
 - Hotkeys toggle the automation globally.
