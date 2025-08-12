@@ -8,7 +8,7 @@ AutoMancer is a basic Windows & MacOS app that automates mouse clicks and keyboa
 It showcases a modern design on each platform and provides global hotkeys to toggle automation.
 
 <p align="center">
-   <img width="640" height="392" alt="image" src="https://github.com/user-attachments/assets/0fabf98f-e691-4609-92ed-63912a8c50fc" />
+   <img width="640" height="368" alt="image" src="https://github.com/user-attachments/assets/0f45aaf9-2a3c-409b-8906-4def05e63e35" />
 </p>
 
 ## Features
