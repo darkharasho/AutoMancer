@@ -11,7 +11,7 @@
     "test": "echo \"No tests specified\""
   },
   "dependencies": {
-    "electron": "^27.1.0",
+    "electron": "^37.2.6",
     "mica-electron": "^1.5.16",
     "@jitsi/robotjs": "^0.6.17"
   },
