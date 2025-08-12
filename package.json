@@ -8,6 +8,7 @@
     "package:win": "electron-packager . AutoMancer --platform=win32 --arch=x64 --icon=images/AutoMancer.ico --out=dist --overwrite",
     "package:mac": "electron-packager . AutoMancer --platform=darwin --arch=x64 --icon=images/AutoMancer.icns --out=dist --overwrite",
     "package": "npm run package:win && npm run package:mac",
+    "dist": "electron-builder --win --mac",
     "test": "echo \"No tests specified\""
   },
   "dependencies": {
@@ -16,10 +17,26 @@
     "@jitsi/robotjs": "^0.6.17"
   },
   "devDependencies": {
-    "electron-packager": "^17.1.1"
+    "electron-packager": "^17.1.1",
+    "electron-builder": "^24.9.1"
   },
   "engines": {
     "node": ">=18 <19",
     "npm": ">=9"
+  },
+  "build": {
+    "appId": "com.automancer.app",
+    "productName": "AutoMancer",
+    "files": [
+      "**/*"
+    ],
+    "mac": {
+      "target": "dmg",
+      "icon": "images/AutoMancer.icns"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "images/AutoMancer.ico"
+    }
   }
 }

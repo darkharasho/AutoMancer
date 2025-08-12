@@ -36,6 +36,10 @@ If you manage versions with `nvm`, the project ships an `.nvmrc` file; run `nvm 
    ```bash
    npm run package
    ```
+4. Create platform installers
+   ```bash
+   npm run dist
+   ```
 
 ## Notes
 
