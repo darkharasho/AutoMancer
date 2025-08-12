@@ -32,15 +32,12 @@ If you manage versions with `nvm`, the project ships an `.nvmrc` file; run `nvm 
    ```bash
    npm start
    ```
-3. Package the app (Windows 64-bit example)
-   ```bash
-   npm run package
-   ```
-4. Create an installer for your current platform
+3. Create an installer for your current platform
    ```bash
    npm run dist
    ```
    Building the macOS DMG must be done on macOS; cross‑platform mac builds are not supported.
+   Windows builds may require Administrator rights or Developer Mode to allow symlink creation during extraction.
 
 ## Notes
 
