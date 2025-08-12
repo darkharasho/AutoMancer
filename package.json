@@ -11,7 +11,7 @@
     "package": "npm run package:win && npm run package:mac",
     "dist:win": "cross-env CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --win",
     "dist:mac": "cross-env CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac && xattr -cr dist/mac-arm64/AutoMancer.app",
-    "test": "echo \"No tests specified\""
+    "test": "node --test"
   },
   "dependencies": {
     "mica-electron": "^1.5.16",
