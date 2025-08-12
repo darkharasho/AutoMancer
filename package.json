@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Configurable auto clicker and key presser with Mica effect",
   "main": "main.js",
+  "author": "AutoMancer",
   "scripts": {
     "start": "electron .",
     "package:win": "electron-packager . AutoMancer --platform=win32 --arch=x64 --icon=images/AutoMancer.ico --out=dist --overwrite",
@@ -12,13 +13,13 @@
     "test": "echo \"No tests specified\""
   },
   "dependencies": {
-    "electron": "^37.2.6",
     "mica-electron": "^1.5.16",
     "@jitsi/robotjs": "^0.6.17"
   },
   "devDependencies": {
     "electron-packager": "^17.1.1",
-    "electron-builder": "^24.9.1"
+    "electron-builder": "^24.9.1",
+    "electron": "^37.2.6"
   },
   "engines": {
     "node": ">=18 <19",
