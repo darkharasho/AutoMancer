@@ -53,11 +53,10 @@
     }
     .card {
       backdrop-filter: blur(20px);
+      background: var(--bg);
       border: 2px solid transparent;
+      border-image: linear-gradient(to bottom right, #D33818, #8c5cf3) 1;
       border-radius: 16px;
-      background:
-        linear-gradient(var(--bg), var(--bg)) padding-box,
-        linear-gradient(to bottom right, #D33818, #8c5cf3) border-box;
       padding: 16px;
       display: flex;
       flex-direction: column;
@@ -164,16 +163,9 @@
     }
     .actions button {
       width: var(--field-width);
-      border-radius: 0;
+      border-radius: 8px;
       border: 2px solid transparent;
-      --btn-bg: rgba(255, 255, 255, 0.07);
-      background:
-        linear-gradient(var(--btn-bg), var(--btn-bg)) padding-box,
-        linear-gradient(to bottom right, #D33818, #8c5cf3) border-box;
-      transition: background 0.2s;
-    }
-    .actions button:hover {
-      --btn-bg: var(--hover);
+      border-image: linear-gradient(to bottom right, #D33818, #8c5cf3) 1;
     }
     button {
       flex: 0 0 auto;
@@ -191,7 +183,7 @@
     button.running {
       background-color: #7f1d1d;
       border-color: #dc2626;
-      background-image: none;
+      border-image: none;
     }
     button.running:hover {
       background-color: #991b1b;
