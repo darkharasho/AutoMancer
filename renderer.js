@@ -33,10 +33,16 @@ keySelect.value = 'a';
   const pickCoordBtn = document.getElementById('pickCoord');
   const clickIntervalInput = document.getElementById('clickInterval');
 
+  let lastHeight = 0;
   function resizeToContent() {
     const h = document.documentElement.scrollHeight;
-    window.auto.resize(h);
+    if (h !== lastHeight) {
+      lastHeight = h;
+      window.auto.resize(h);
+    }
   }
+  const ro = new ResizeObserver(() => resizeToContent());
+  ro.observe(document.querySelector('main'));
 
   function getClickConfig() {
     const interval = parseInt(clickIntervalInput.value, 10);
