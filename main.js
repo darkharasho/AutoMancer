@@ -59,10 +59,7 @@ function notifyKeyState() {
 function startClicker(config) {
   stopClicker();
   if (config) {
-    clickInterval = config.interval || clickInterval;
-    clickJitter = Number.isFinite(config.jitter) ? Math.max(0, config.jitter) : clickJitter;
-    clickButton = config.button || clickButton;
-    clickTarget = config.target || clickTarget;
+    updateClickConfig(config);
   }
   if (!robot) {
     robot = require('@jitsi/robotjs');
@@ -115,6 +112,33 @@ function stopKeyPresser() {
     keyIntervalId = null;
   }
   notifyKeyState();
+}
+
+function updateClickConfig(config) {
+  if (config) {
+    if (Number.isFinite(config.interval)) clickInterval = config.interval;
+    if (Number.isFinite(config.jitter)) clickJitter = Math.max(0, config.jitter);
+    if (config.button) clickButton = config.button;
+    if (config.target) clickTarget = config.target;
+  }
+}
+
+function getClickState() {
+  return {
+    interval: clickInterval,
+    jitter: clickJitter,
+    button: clickButton,
+    target: clickTarget,
+    running: Boolean(clickIntervalId)
+  };
+}
+
+function getKeyState() {
+  return {
+    key: currentKey,
+    interval: keyInterval,
+    running: Boolean(keyIntervalId)
+  };
 }
 
 function toggleClicker() {
@@ -270,17 +294,19 @@ function createWindow() {
   registerKeyHotkey(keyHotkey);
 }
 
-app.whenReady().then(() => {
-  settingsPath = path.join(app.getPath('userData'), 'settings.json');
-  loadSettings();
-  createWindow();
-});
+if (process.env.NODE_ENV !== 'test') {
+  app.whenReady().then(() => {
+    settingsPath = path.join(app.getPath('userData'), 'settings.json');
+    loadSettings();
+    createWindow();
+  });
 
-app.on('will-quit', () => {
-  globalShortcut.unregisterAll();
-  stopClicker();
-  stopKeyPresser();
-});
+  app.on('will-quit', () => {
+    globalShortcut.unregisterAll();
+    stopClicker();
+    stopKeyPresser();
+  });
+}
 
   ipcMain.on('start-clicker', (e, config) => startClicker(config));
   ipcMain.on('stop-clicker', stopClicker);
@@ -298,12 +324,7 @@ app.on('will-quit', () => {
   // });
 
   ipcMain.on('update-click-config', (e, config) => {
-    if (config) {
-      if (Number.isFinite(config.interval)) clickInterval = config.interval;
-      if (Number.isFinite(config.jitter)) clickJitter = Math.max(0, config.jitter);
-      if (config.button) clickButton = config.button;
-      if (config.target) clickTarget = config.target;
-    }
+    updateClickConfig(config);
   });
 ipcMain.handle('resize', (event, height) => {
   const win = BrowserWindow.fromWebContents(event.sender);
@@ -312,3 +333,13 @@ ipcMain.handle('resize', (event, height) => {
     win.setContentSize(width, Math.round(height) + 8);
   }
 });
+
+module.exports = {
+  startClicker,
+  stopClicker,
+  startKeyPresser,
+  stopKeyPresser,
+  updateClickConfig,
+  getClickState,
+  getKeyState
+};
