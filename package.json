@@ -1,6 +1,6 @@
 {
   "name": "automancer",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Configurable auto clicker and key presser with Mica effect",
   "main": "main.js",
   "author": "AutoMancer",

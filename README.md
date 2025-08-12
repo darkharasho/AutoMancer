@@ -15,6 +15,7 @@ It showcases a modern design on each platform and provides global hotkeys to tog
 ## Features
 
 - Configurable auto clicker and key presser
+- Optional jitter to randomize click intervals (0–N ms, default 0)
 - Automation via prebuilt `@jitsi/robotjs`
 - Windows 11 Mica effect via `mica-electron`
 - Global hotkeys (F6 for clicker, F7 for key presser)
