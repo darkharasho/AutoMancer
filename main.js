@@ -1,4 +1,4 @@
-const { app, ipcMain, globalShortcut, BrowserWindow, screen, nativeImage } = require('electron');
+const { app, ipcMain, globalShortcut, BrowserWindow, screen, nativeImage, Notification, shell } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const { MicaBrowserWindow } = require('mica-electron');
@@ -294,11 +294,51 @@ function createWindow() {
   registerKeyHotkey(keyHotkey);
 }
 
+function compareVersions(a, b) {
+  const pa = a.split('.').map(n => parseInt(n, 10) || 0);
+  const pb = b.split('.').map(n => parseInt(n, 10) || 0);
+  for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+    const diff = (pa[i] || 0) - (pb[i] || 0);
+    if (diff !== 0) {
+      return diff > 0 ? 1 : -1;
+    }
+  }
+  return 0;
+}
+
+async function checkForUpdates() {
+  try {
+    const res = await fetch('https://api.github.com/repos/AutoMancer/AutoMancer/releases/latest', {
+      headers: { 'User-Agent': 'AutoMancer' }
+    });
+    if (!res.ok) return;
+    const data = await res.json();
+    if (!data.tag_name) return;
+    const latest = data.tag_name.replace(/^v/, '');
+    const current = app.getVersion();
+    if (compareVersions(latest, current) > 0 && Notification) {
+      const notification = new Notification({
+        title: 'Update available',
+        body: `Version ${latest} is available. Click to download.`
+      });
+      notification.on('click', () => {
+        if (data.html_url && shell) {
+          shell.openExternal(data.html_url);
+        }
+      });
+      notification.show();
+    }
+  } catch (_) {
+    // ignore errors
+  }
+}
+
 if (process.env.NODE_ENV !== 'test') {
   app.whenReady().then(() => {
     settingsPath = path.join(app.getPath('userData'), 'settings.json');
     loadSettings();
     createWindow();
+    checkForUpdates();
   });
 
   app.on('will-quit', () => {
