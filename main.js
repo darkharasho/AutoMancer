@@ -308,8 +308,11 @@ function compareVersions(a, b) {
 
 async function checkForUpdates() {
   try {
-    const res = await fetch('https://api.github.com/repos/AutoMancer/AutoMancer/releases?per_page=1', {
-      headers: { 'User-Agent': 'AutoMancer' }
+    const res = await fetch('https://api.github.com/repos/darkharasho/AutoMancer/releases?per_page=1', {
+      headers: {
+        'User-Agent': 'AutoMancer',
+        'Accept': 'application/vnd.github+json'
+      }
     });
     if (!res.ok) return;
     const releases = await res.json();
