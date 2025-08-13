@@ -1,4 +1,4 @@
-const { app, ipcMain, globalShortcut, BrowserWindow, screen, nativeImage, Notification, shell } = require('electron');
+const { app, ipcMain, globalShortcut, BrowserWindow, screen, nativeImage, shell, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const { MicaBrowserWindow } = require('mica-electron');
@@ -316,17 +316,19 @@ async function checkForUpdates() {
     if (!data.tag_name) return;
     const latest = data.tag_name.replace(/^v/, '');
     const current = app.getVersion();
-    if (compareVersions(latest, current) > 0 && Notification) {
-      const notification = new Notification({
+    if (compareVersions(latest, current) > 0 && dialog) {
+      const { response } = await dialog.showMessageBox(win || null, {
+        type: 'info',
+        buttons: ['Download', 'Later'],
+        defaultId: 0,
+        cancelId: 1,
         title: 'Update available',
-        body: `Version ${latest} is available. Click to download.`
+        message: `Version ${latest} is available.`,
+        detail: 'Click "Download" to open the latest release.'
       });
-      notification.on('click', () => {
-        if (data.html_url && shell) {
-          shell.openExternal(data.html_url);
-        }
-      });
-      notification.show();
+      if (response === 0 && data.html_url && shell) {
+        shell.openExternal(data.html_url);
+      }
     }
   } catch (_) {
     // ignore errors
