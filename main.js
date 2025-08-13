@@ -321,6 +321,9 @@ async function checkForUpdates() {
     const latest = latestRelease.tag_name.replace(/^v/, '');
     const current = app.getVersion();
     if (compareVersions(latest, current) > 0 && dialog) {
+      const icon = nativeImage.createFromPath(
+        path.join(__dirname, 'images', 'AutoMancer.png')
+      );
       const { response } = await dialog.showMessageBox(win || null, {
         type: 'info',
         buttons: ['Download', 'Later'],
@@ -328,7 +331,8 @@ async function checkForUpdates() {
         cancelId: 1,
         title: 'Update available',
         message: `Version ${latest} is available.`,
-        detail: 'Click "Download" to open the latest release.'
+        detail: 'Click "Download" to open the latest release.',
+        icon
       });
       if (response === 0 && latestRelease.html_url && shell) {
         shell.openExternal(latestRelease.html_url);
