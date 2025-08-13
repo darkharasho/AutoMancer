@@ -308,13 +308,14 @@ function compareVersions(a, b) {
 
 async function checkForUpdates() {
   try {
-    const res = await fetch('https://api.github.com/repos/AutoMancer/AutoMancer/releases/latest', {
+    const res = await fetch('https://api.github.com/repos/AutoMancer/AutoMancer/releases?per_page=1', {
       headers: { 'User-Agent': 'AutoMancer' }
     });
     if (!res.ok) return;
-    const data = await res.json();
-    if (!data.tag_name) return;
-    const latest = data.tag_name.replace(/^v/, '');
+    const releases = await res.json();
+    const latestRelease = releases[0];
+    if (!latestRelease || !latestRelease.tag_name) return;
+    const latest = latestRelease.tag_name.replace(/^v/, '');
     const current = app.getVersion();
     if (compareVersions(latest, current) > 0 && dialog) {
       const { response } = await dialog.showMessageBox(win || null, {
@@ -326,8 +327,8 @@ async function checkForUpdates() {
         message: `Version ${latest} is available.`,
         detail: 'Click "Download" to open the latest release.'
       });
-      if (response === 0 && data.html_url && shell) {
-        shell.openExternal(data.html_url);
+      if (response === 0 && latestRelease.html_url && shell) {
+        shell.openExternal(latestRelease.html_url);
       }
     }
   } catch (_) {
