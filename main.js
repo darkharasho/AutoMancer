@@ -1,4 +1,4 @@
-const { app, ipcMain, globalShortcut, BrowserWindow, screen, nativeImage } = require('electron');
+const { app, ipcMain, globalShortcut, BrowserWindow, screen, nativeImage, shell, dialog } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const { MicaBrowserWindow } = require('mica-electron');
@@ -294,11 +294,61 @@ function createWindow() {
   registerKeyHotkey(keyHotkey);
 }
 
+function compareVersions(a, b) {
+  const pa = a.split('.').map(n => parseInt(n, 10) || 0);
+  const pb = b.split('.').map(n => parseInt(n, 10) || 0);
+  for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+    const diff = (pa[i] || 0) - (pb[i] || 0);
+    if (diff !== 0) {
+      return diff > 0 ? 1 : -1;
+    }
+  }
+  return 0;
+}
+
+async function checkForUpdates() {
+  try {
+    const res = await fetch('https://api.github.com/repos/darkharasho/AutoMancer/releases?per_page=1', {
+      headers: {
+        'User-Agent': 'AutoMancer',
+        'Accept': 'application/vnd.github+json'
+      }
+    });
+    if (!res.ok) return;
+    const releases = await res.json();
+    const latestRelease = releases[0];
+    if (!latestRelease || !latestRelease.tag_name) return;
+    const latest = latestRelease.tag_name.replace(/^v/, '');
+    const current = app.getVersion();
+    if (compareVersions(latest, current) > 0 && dialog) {
+      const icon = nativeImage.createFromPath(
+        path.join(__dirname, 'images', 'AutoMancer.png')
+      );
+      const { response } = await dialog.showMessageBox(win || null, {
+        type: 'info',
+        buttons: ['Download', 'Later'],
+        defaultId: 0,
+        cancelId: 1,
+        title: 'Update available',
+        message: `Version ${latest} is available.`,
+        detail: 'Click "Download" to open the latest release.',
+        icon
+      });
+      if (response === 0 && latestRelease.html_url && shell) {
+        shell.openExternal(latestRelease.html_url);
+      }
+    }
+  } catch (_) {
+    // ignore errors
+  }
+}
+
 if (process.env.NODE_ENV !== 'test') {
   app.whenReady().then(() => {
     settingsPath = path.join(app.getPath('userData'), 'settings.json');
     loadSettings();
     createWindow();
+    checkForUpdates();
   });
 
   app.on('will-quit', () => {
