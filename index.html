@@ -49,10 +49,9 @@
     }
 
     /* Exclude the top corners from the draggable region so the
-       operating system can apply rounded corners. */
-    header::before,
-    header::after {
-      content: "";
+       operating system can apply rounded corners. Pseudo-elements
+       are ignored by the window manager, so use real elements. */
+    header .drag-exclude {
       position: absolute;
       top: 0;
       width: 12px;
@@ -60,8 +59,8 @@
       -webkit-app-region: no-drag;
       pointer-events: none;
     }
-    header::before { left: 0; }
-    header::after { right: 0; }
+    header .drag-exclude.left { left: 0; }
+    header .drag-exclude.right { right: 0; }
     header img {
       height: 20px;
       margin-right: 8px;
@@ -265,7 +264,11 @@
   </style>
 </head>
 <body>
-  <header><img src="images/AutoMancer.png" alt="AutoMancer logo" />AutoMancer</header>
+  <header>
+    <div class="drag-exclude left"></div>
+    <div class="drag-exclude right"></div>
+    <img src="images/AutoMancer.png" alt="AutoMancer logo" />AutoMancer
+  </header>
   <main>
     <div class="tabs" role="tablist">
       <button class="tab active" data-tab="clicker" role="tab">Auto Clicker</button>
