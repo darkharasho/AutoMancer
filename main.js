@@ -180,30 +180,33 @@ function createPickerWindow() {
   });
 }
 
-function pickPoint() {
-  return new Promise((resolve) => {
-    createPickerWindow();
-    const displays = screen.getAllDisplays();
-    let minX = Infinity;
-    let minY = Infinity;
-    let maxX = -Infinity;
-    let maxY = -Infinity;
-    for (const d of displays) {
-      const b = d.bounds;
-      minX = Math.min(minX, b.x);
-      minY = Math.min(minY, b.y);
-      maxX = Math.max(maxX, b.x + b.width);
-      maxY = Math.max(maxY, b.y + b.height);
-    }
-    pickerWin.setBounds({
-      x: minX,
-      y: minY,
-      width: maxX - minX,
-      height: maxY - minY
-    });
-    pickerWin.show();
-    pickerWin.focus();
+async function pickPoint() {
+  createPickerWindow();
+  if (pickerWin.webContents.isLoading()) {
+    await new Promise(resolve => pickerWin.webContents.once('did-finish-load', resolve));
+  }
+  const displays = screen.getAllDisplays();
+  let minX = Infinity;
+  let minY = Infinity;
+  let maxX = -Infinity;
+  let maxY = -Infinity;
+  for (const d of displays) {
+    const b = d.bounds;
+    minX = Math.min(minX, b.x);
+    minY = Math.min(minY, b.y);
+    maxX = Math.max(maxX, b.x + b.width);
+    maxY = Math.max(maxY, b.y + b.height);
+  }
+  pickerWin.setBounds({
+    x: minX,
+    y: minY,
+    width: maxX - minX,
+    height: maxY - minY
+  });
+  pickerWin.show();
+  pickerWin.focus();
 
+  return new Promise((resolve) => {
     const finish = () => {
       const pos = screen.getCursorScreenPoint();
       resolve(pos);
