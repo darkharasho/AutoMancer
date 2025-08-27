@@ -270,14 +270,15 @@ function createWindow() {
     height: 360,
     resizable: false,
     icon,
+    frame: false,
+    transparent: true,
+    backgroundColor: '#00000000',
     titleBarStyle: 'hidden',
     titleBarOverlay: { color: '#00000000', symbolColor: '#ffffff' },
     autoHideMenuBar: true,
     show: false,
     alwaysOnTop: true,
-    ...(isWin
-      ? { frame: false, transparent: true, roundedCorners: true, backgroundColor: '#00000000' }
-      : { backgroundColor: '#01000000' }),
+    ...(isWin ? { roundedCorners: true } : {}),
     ...(isMac ? { vibrancy: 'under-window', visualEffectState: 'active' } : {}),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
@@ -306,6 +307,12 @@ function createWindow() {
       win.setSize(w, h + 1);
       setTimeout(() => win.setSize(w, h), 10);
     }, 100);
+  });
+  win.on('close', () => {
+    isQuitting = true;
+    if (pickerWin && !pickerWin.isDestroyed()) {
+      pickerWin.destroy();
+    }
   });
   win.on('closed', () => {
     win = null;
@@ -336,7 +343,12 @@ async function checkForUpdates() {
       }
     });
     if (!res.ok) return;
-    const releases = await res.json();
+    let releases;
+    try {
+      releases = await res.json();
+    } catch {
+      return;
+    }
     const latestRelease = releases[0];
     if (!latestRelease || !latestRelease.tag_name) return;
     const latest = latestRelease.tag_name.replace(/^v/, '');
@@ -380,6 +392,9 @@ if (process.env.NODE_ENV !== 'test') {
   });
   app.on('before-quit', () => {
     isQuitting = true;
+  });
+  app.on('window-all-closed', () => {
+    app.quit();
   });
 }
 
