@@ -125,6 +125,13 @@ function updateClickConfig(config) {
   }
 }
 
+function updateKeyConfig(config) {
+  if (config) {
+    if (typeof config.key === 'string') currentKey = config.key;
+    if (Number.isFinite(config.interval)) keyInterval = config.interval;
+  }
+}
+
 function getClickState() {
   return {
     interval: clickInterval,
@@ -412,6 +419,9 @@ if (process.env.NODE_ENV !== 'test') {
   ipcMain.on('update-click-config', (e, config) => {
     updateClickConfig(config);
   });
+  ipcMain.on('update-key-config', (e, config) => {
+    updateKeyConfig(config);
+  });
   ipcMain.on('resize-window', (e, height) => {
     if (win) {
       const [w] = win.getContentSize();
@@ -425,6 +435,7 @@ module.exports = {
   startKeyPresser,
   stopKeyPresser,
   updateClickConfig,
+  updateKeyConfig,
   getClickState,
   getKeyState
 };

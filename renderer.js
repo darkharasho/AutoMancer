@@ -1,4 +1,5 @@
 const keySelect = document.getElementById('keySelect');
+const keyIntervalInput = document.getElementById('keyInterval');
 const header = document.querySelector('header');
 const platform = window.env && window.env.platform;
 if (platform) {
@@ -99,6 +100,16 @@ keySelect.value = 'a';
     }
   });
 
+  function sendKeyConfig() {
+    window.auto.updateKeyConfig({
+      key: keySelect.value,
+      interval: parseInt(keyIntervalInput.value, 10)
+    });
+  }
+  [keySelect, keyIntervalInput].forEach(el => {
+    el.addEventListener('change', sendKeyConfig);
+  });
+
 const toggleKeyBtn = document.getElementById('toggleKey');
 toggleKeyBtn.addEventListener('click', () => {
   const running = toggleKeyBtn.classList.contains('running');
@@ -106,7 +117,7 @@ toggleKeyBtn.addEventListener('click', () => {
     window.auto.stopKeyPresser();
   } else {
     const key = keySelect.value;
-    const interval = parseInt(document.getElementById('keyInterval').value, 10);
+    const interval = parseInt(keyIntervalInput.value, 10);
     window.auto.startKeyPresser(key, interval);
   }
 });
@@ -159,4 +170,5 @@ window.auto.getHotkeys().then(({ clickHotkey, keyHotkey }) => {
 });
 
 sendClickConfig();
+sendKeyConfig();
 resizeToContent();

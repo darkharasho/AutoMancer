@@ -44,7 +44,8 @@ const {
   getClickState,
   startKeyPresser,
   stopKeyPresser,
-  getKeyState
+  getKeyState,
+  updateKeyConfig
 } = require('../main.js');
 
 test('auto clicker config and toggling', async () => {
@@ -80,8 +81,10 @@ test('auto key presser config and toggling', async () => {
   assert.strictEqual(state.key, 'x');
   assert.strictEqual(state.interval, 1);
   assert.ok(state.running);
+  stopKeyPresser();
 
-  startKeyPresser('y', 2);
+  updateKeyConfig({ key: 'y', interval: 2 });
+  startKeyPresser();
   state = getKeyState();
   assert.strictEqual(state.key, 'y');
   assert.strictEqual(state.interval, 2);
