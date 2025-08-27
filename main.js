@@ -26,6 +26,27 @@ let clickHotkey = 'F6';
 let keyHotkey = 'F7';
 let settingsPath;
 
+function buildRoundedRect(width, height, radius) {
+  const rects = [];
+  for (let x = 0; x < width; x++) {
+    let y1 = 0;
+    let y2 = height;
+    if (x < radius) {
+      const dx = radius - x;
+      const dy = Math.round(radius - Math.sqrt(radius * radius - dx * dx));
+      y1 = dy;
+      y2 = height - dy;
+    } else if (x >= width - radius) {
+      const dx = x - (width - radius) + 1;
+      const dy = Math.round(radius - Math.sqrt(radius * radius - dx * dx));
+      y1 = dy;
+      y2 = height - dy;
+    }
+    rects.push({ x, y: y1, width: 1, height: y2 - y1 });
+  }
+  return rects;
+}
+
 function loadSettings() {
   try {
     const data = fs.readFileSync(settingsPath, 'utf8');
@@ -302,6 +323,14 @@ function createWindow() {
     win.setRoundedCorners(true);
   }
 
+  const applyWindowShape = () => {
+    if (typeof win.setShape === 'function') {
+      const [w, h] = win.getSize();
+      win.setShape(buildRoundedRect(w, h, 12));
+    }
+  };
+  win.on('resize', applyWindowShape);
+
   win.loadFile(path.join(__dirname, 'index.html'));
   win.once('ready-to-show', () => {
     if (isWin) {
@@ -312,6 +341,7 @@ function createWindow() {
     if (typeof win.setRoundedCorners === 'function') {
       win.setRoundedCorners(true);
     }
+    applyWindowShape();
     // --- Force a tiny resize to trigger Mica ---
     setTimeout(() => {
       const [w, h] = win.getSize();

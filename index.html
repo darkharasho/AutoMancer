@@ -28,16 +28,6 @@
       overflow: hidden;
     }
 
-    /* Provide a barely visible backdrop so transparent areas still
-       capture clicks while allowing rounded corners to show. */
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.01);
-      border-radius: 12px;
-      pointer-events: none;
-    }
     header {
       height: 32px;
       padding: 0 12px;
