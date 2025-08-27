@@ -36,12 +36,17 @@ keySelect.value = 'a';
 
   const tabButtons = document.querySelectorAll('.tab');
   const tabs = document.querySelectorAll('.tab-content');
+  function resizeToContent() {
+    const height = Math.ceil(document.documentElement.scrollHeight);
+    window.auto.resizeWindow(height);
+  }
   tabButtons.forEach(btn => {
     btn.addEventListener('click', () => {
       tabButtons.forEach(b => b.classList.remove('active'));
       tabs.forEach(t => t.classList.remove('active'));
       btn.classList.add('active');
       document.getElementById(btn.dataset.tab).classList.add('active');
+      resizeToContent();
     });
   });
 
@@ -66,6 +71,7 @@ keySelect.value = 'a';
 
   clickTargetSel.addEventListener('change', () => {
     coordFields.style.display = clickTargetSel.value === 'coords' ? 'flex' : 'none';
+    resizeToContent();
     sendClickConfig();
   });
 
@@ -152,3 +158,4 @@ window.auto.getHotkeys().then(({ clickHotkey, keyHotkey }) => {
 });
 
 sendClickConfig();
+resizeToContent();

@@ -183,6 +183,7 @@ function pickPoint() {
       skipTaskbar: true,
       backgroundColor: '#00000000',
       hasShadow: false,
+      acceptFirstMouse: true,
       webPreferences: {
         nodeIntegration: true,
         contextIsolation: false
@@ -191,7 +192,10 @@ function pickPoint() {
     picker.loadFile(path.join(__dirname, 'picker.html'), {
       query: { offsetX: minX, offsetY: minY }
     });
-    picker.once('ready-to-show', () => picker.show());
+    picker.once('ready-to-show', () => {
+      picker.show();
+      picker.focus();
+    });
 
     const finish = () => {
       const pos = screen.getCursorScreenPoint();
@@ -247,7 +251,7 @@ function createWindow() {
   const WindowClass = isWin ? MicaBrowserWindow : BrowserWindow;
   const windowOpts = {
     width: 360,
-    height: 420,
+    height: 360,
     resizable: false,
     icon,
     titleBarStyle: 'hidden',
@@ -369,6 +373,12 @@ if (process.env.NODE_ENV !== 'test') {
   ipcMain.handle('pick-point', () => pickPoint());
   ipcMain.on('update-click-config', (e, config) => {
     updateClickConfig(config);
+  });
+  ipcMain.on('resize-window', (e, height) => {
+    if (win) {
+      const [w] = win.getContentSize();
+      win.setContentSize(w, Math.round(height));
+    }
   });
 
 module.exports = {
