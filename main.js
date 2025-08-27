@@ -4,6 +4,7 @@ const fs = require('fs');
 const { MicaBrowserWindow } = require('mica-electron');
 let robot;
 let win;
+let pickerWin;
 
 // Disable GPU acceleration by default to avoid crashes on some systems.
 // Set AUTOMANCER_ENABLE_GPU=1 to opt in to hardware acceleration.
@@ -157,8 +158,31 @@ function toggleKeyPresser() {
   }
 }
 
+function createPickerWindow() {
+  if (pickerWin && !pickerWin.isDestroyed()) return;
+  pickerWin = new BrowserWindow({
+    show: false,
+    transparent: true,
+    frame: false,
+    alwaysOnTop: true,
+    skipTaskbar: true,
+    backgroundColor: '#00000000',
+    hasShadow: false,
+    acceptFirstMouse: true,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false
+    }
+  });
+  pickerWin.loadFile(path.join(__dirname, 'picker.html'));
+  pickerWin.on('closed', () => {
+    pickerWin = null;
+  });
+}
+
 function pickPoint() {
   return new Promise((resolve) => {
+    createPickerWindow();
     const displays = screen.getAllDisplays();
     let minX = Infinity;
     let minY = Infinity;
@@ -171,39 +195,23 @@ function pickPoint() {
       maxX = Math.max(maxX, b.x + b.width);
       maxY = Math.max(maxY, b.y + b.height);
     }
-    const picker = new BrowserWindow({
+    pickerWin.setBounds({
       x: minX,
       y: minY,
       width: maxX - minX,
-      height: maxY - minY,
-      transparent: true,
-      frame: false,
-      show: true,
-      alwaysOnTop: true,
-      skipTaskbar: true,
-      backgroundColor: '#00000000',
-      hasShadow: false,
-      acceptFirstMouse: true,
-      webPreferences: {
-        nodeIntegration: true,
-        contextIsolation: false
-      }
+      height: maxY - minY
     });
-    picker.webContents.once('dom-ready', () => {
-      picker.focus();
-    });
-    picker.loadFile(path.join(__dirname, 'picker.html'), {
-      query: { offsetX: minX, offsetY: minY }
-    });
+    pickerWin.show();
+    pickerWin.focus();
 
     const finish = () => {
       const pos = screen.getCursorScreenPoint();
       resolve(pos);
-      picker.close();
+      pickerWin.hide();
     };
 
     ipcMain.once('picker-done', finish);
-    picker.on('closed', () => {
+    pickerWin.once('closed', () => {
       ipcMain.removeListener('picker-done', finish);
     });
   });
@@ -352,6 +360,7 @@ if (process.env.NODE_ENV !== 'test') {
     settingsPath = path.join(app.getPath('userData'), 'settings.json');
     loadSettings();
     createWindow();
+    createPickerWindow();
     checkForUpdates();
   });
 
