@@ -45,7 +45,7 @@ keySelect.value = 'a';
   const ro = new ResizeObserver(() => resizeToContent());
   ro.observe(document.querySelector('main'));
 
-  const tabButtons = document.querySelectorAll('.tab-btn');
+  const tabButtons = document.querySelectorAll('.tab');
   const tabs = document.querySelectorAll('.tab-content');
   tabButtons.forEach(btn => {
     btn.addEventListener('click', () => {

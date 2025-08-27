@@ -53,19 +53,22 @@
     }
     .tabs {
       display: flex;
-      gap: 8px;
       -webkit-app-region: no-drag;
+      border-bottom: 1px solid var(--border);
     }
-    .tab-btn {
+    .tab {
       flex: 1;
-      padding: 8px 0;
-      background: rgba(255, 255, 255, 0.07);
-      border: 1px solid var(--border);
-      border-radius: 6px;
+      padding: 6px 0;
+      background: none;
+      border: none;
+      color: inherit;
       cursor: pointer;
+      border-bottom: 2px solid transparent;
+      border-radius: 0;
     }
-    .tab-btn.active {
-      border-color: var(--accent);
+    .tab.active {
+      border-bottom-color: var(--accent);
+      color: var(--accent);
     }
     .tab-content {
       display: none;
@@ -238,9 +241,9 @@
 <body>
   <header><img src="images/AutoMancer.png" alt="AutoMancer logo" />AutoMancer</header>
   <main>
-    <div class="tabs">
-      <button class="tab-btn active" data-tab="clicker">Auto Clicker</button>
-      <button class="tab-btn" data-tab="key">Auto Key Presser</button>
+    <div class="tabs" role="tablist">
+      <button class="tab active" data-tab="clicker" role="tab">Auto Clicker</button>
+      <button class="tab" data-tab="key" role="tab">Auto Key Presser</button>
     </div>
     <section id="clicker" class="card tab-content active">
       <h2><img src="images/cursor.png" alt="" class="icon" />Auto Clicker</h2>
