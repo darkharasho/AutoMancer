@@ -1,4 +1,4 @@
-const keySelect = document.getElementById('key');
+const keySelect = document.getElementById('keySelect');
 const header = document.querySelector('header');
 const platform = window.env && window.env.platform;
 if (platform) {
@@ -98,7 +98,7 @@ toggleKeyBtn.addEventListener('click', () => {
   if (running) {
     window.auto.stopKeyPresser();
   } else {
-    const key = document.getElementById('key').value;
+    const key = keySelect.value;
     const interval = parseInt(document.getElementById('keyInterval').value, 10);
     window.auto.startKeyPresser(key, interval);
   }
