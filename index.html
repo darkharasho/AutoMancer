@@ -45,7 +45,23 @@
       align-items: center;
       -webkit-app-region: drag;
       font-weight: 500;
+      position: relative;
     }
+
+    /* Exclude the top corners from the draggable region so the
+       operating system can apply rounded corners. */
+    header::before,
+    header::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      width: 12px;
+      height: 12px;
+      -webkit-app-region: no-drag;
+      pointer-events: none;
+    }
+    header::before { left: 0; }
+    header::after { right: 0; }
     header img {
       height: 20px;
       margin-right: 8px;
