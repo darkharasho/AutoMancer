@@ -36,9 +36,10 @@ keySelect.value = 'a';
 
   const tabButtons = document.querySelectorAll('.tab');
   const tabs = document.querySelectorAll('.tab-content');
+  const main = document.querySelector('main');
   function resizeToContent() {
-    const height = Math.ceil(document.documentElement.scrollHeight);
-    window.auto.resizeWindow(height);
+    const contentHeight = header.offsetHeight + main.scrollHeight;
+    window.auto.resizeWindow(Math.ceil(contentHeight));
   }
   tabButtons.forEach(btn => {
     btn.addEventListener('click', () => {

@@ -178,7 +178,7 @@ function pickPoint() {
       height: maxY - minY,
       transparent: true,
       frame: false,
-      show: false,
+      show: true,
       alwaysOnTop: true,
       skipTaskbar: true,
       backgroundColor: '#00000000',
@@ -189,12 +189,11 @@ function pickPoint() {
         contextIsolation: false
       }
     });
+    picker.webContents.once('dom-ready', () => {
+      picker.focus();
+    });
     picker.loadFile(path.join(__dirname, 'picker.html'), {
       query: { offsetX: minX, offsetY: minY }
-    });
-    picker.once('ready-to-show', () => {
-      picker.show();
-      picker.focus();
     });
 
     const finish = () => {
