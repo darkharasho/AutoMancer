@@ -34,17 +34,6 @@ keySelect.value = 'a';
   const clickIntervalInput = document.getElementById('clickInterval');
   const clickJitterInput = document.getElementById('clickJitter');
 
-  let lastHeight = 0;
-  function resizeToContent() {
-    const h = document.documentElement.scrollHeight;
-    if (h !== lastHeight) {
-      lastHeight = h;
-      window.auto.resize(h);
-    }
-  }
-  const ro = new ResizeObserver(() => resizeToContent());
-  ro.observe(document.querySelector('main'));
-
   const tabButtons = document.querySelectorAll('.tab');
   const tabs = document.querySelectorAll('.tab-content');
   tabButtons.forEach(btn => {
@@ -53,7 +42,6 @@ keySelect.value = 'a';
       tabs.forEach(t => t.classList.remove('active'));
       btn.classList.add('active');
       document.getElementById(btn.dataset.tab).classList.add('active');
-      resizeToContent();
     });
   });
 
@@ -78,15 +66,6 @@ keySelect.value = 'a';
 
   clickTargetSel.addEventListener('change', () => {
     coordFields.style.display = clickTargetSel.value === 'coords' ? 'flex' : 'none';
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        if (clickTargetSel.value !== 'coords') {
-          window.auto.resize(360); // Force original height
-        } else {
-          resizeToContent();
-        }
-      });
-    });
     sendClickConfig();
   });
 
@@ -170,7 +149,6 @@ keyHotkeyBtn.addEventListener('click', () => captureHotkey(keyHotkeyBtn, window.
 window.auto.getHotkeys().then(({ clickHotkey, keyHotkey }) => {
   if (clickHotkey) clickHotkeyBtn.textContent = clickHotkey;
   if (keyHotkey) keyHotkeyBtn.textContent = keyHotkey;
-  resizeToContent();
 });
 
 sendClickConfig();
