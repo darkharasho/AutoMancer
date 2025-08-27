@@ -45,11 +45,34 @@
     }
     main {
       padding: 16px 24px 24px;
-      display: grid;
+      display: flex;
+      flex-direction: column;
       gap: 16px;
-      grid-template-columns: repeat(2, 1fr);
       align-items: stretch;
       box-sizing: border-box;
+    }
+    .tabs {
+      display: flex;
+      gap: 8px;
+      -webkit-app-region: no-drag;
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 8px 0;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .tab-btn.active {
+      border-color: var(--accent);
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: flex;
+      flex-direction: column;
     }
     .card {
       backdrop-filter: blur(20px);
@@ -215,7 +238,11 @@
 <body>
   <header><img src="images/AutoMancer.png" alt="AutoMancer logo" />AutoMancer</header>
   <main>
-    <section class="card">
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="clicker">Auto Clicker</button>
+      <button class="tab-btn" data-tab="key">Auto Key Presser</button>
+    </div>
+    <section id="clicker" class="card tab-content active">
       <h2><img src="images/cursor.png" alt="" class="icon" />Auto Clicker</h2>
       <label>
         Interval (ms)
@@ -251,7 +278,7 @@
         <button id="toggleClicker">Start</button>
       </div>
     </section>
-    <section class="card">
+    <section id="key" class="card tab-content">
       <h2><img src="images/keyboard.png" alt="" class="icon" />Auto Key Presser</h2>
       <label>
         Key

@@ -246,7 +246,7 @@ function createWindow() {
   }
   const WindowClass = isWin ? MicaBrowserWindow : BrowserWindow;
   const windowOpts = {
-    width: 640,
+    width: 360,
     height: 360,
     icon,
     titleBarStyle: 'hidden',

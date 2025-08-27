@@ -45,6 +45,18 @@ keySelect.value = 'a';
   const ro = new ResizeObserver(() => resizeToContent());
   ro.observe(document.querySelector('main'));
 
+  const tabButtons = document.querySelectorAll('.tab-btn');
+  const tabs = document.querySelectorAll('.tab-content');
+  tabButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabButtons.forEach(b => b.classList.remove('active'));
+      tabs.forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab).classList.add('active');
+      resizeToContent();
+    });
+  });
+
   function getClickConfig() {
     const interval = parseInt(clickIntervalInput.value, 10);
     const jitter = parseInt(clickJitterInput.value, 10);
