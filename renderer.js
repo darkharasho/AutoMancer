@@ -1,4 +1,5 @@
-const keySelect = document.getElementById('key');
+const keySelect = document.getElementById('keySelect');
+const keyIntervalInput = document.getElementById('keyInterval');
 const header = document.querySelector('header');
 const platform = window.env && window.env.platform;
 if (platform) {
@@ -34,16 +35,22 @@ keySelect.value = 'a';
   const clickIntervalInput = document.getElementById('clickInterval');
   const clickJitterInput = document.getElementById('clickJitter');
 
-  let lastHeight = 0;
+  const tabButtons = document.querySelectorAll('.tab');
+  const tabs = document.querySelectorAll('.tab-content');
+  const main = document.querySelector('main');
   function resizeToContent() {
-    const h = document.documentElement.scrollHeight;
-    if (h !== lastHeight) {
-      lastHeight = h;
-      window.auto.resize(h);
-    }
+    const contentHeight = header.offsetHeight + main.scrollHeight;
+    window.auto.resizeWindow(Math.ceil(contentHeight));
   }
-  const ro = new ResizeObserver(() => resizeToContent());
-  ro.observe(document.querySelector('main'));
+  tabButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabButtons.forEach(b => b.classList.remove('active'));
+      tabs.forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab).classList.add('active');
+      resizeToContent();
+    });
+  });
 
   function getClickConfig() {
     const interval = parseInt(clickIntervalInput.value, 10);
@@ -66,15 +73,7 @@ keySelect.value = 'a';
 
   clickTargetSel.addEventListener('change', () => {
     coordFields.style.display = clickTargetSel.value === 'coords' ? 'flex' : 'none';
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        if (clickTargetSel.value !== 'coords') {
-          window.auto.resize(360); // Force original height
-        } else {
-          resizeToContent();
-        }
-      });
-    });
+    resizeToContent();
     sendClickConfig();
   });
 
@@ -101,14 +100,24 @@ keySelect.value = 'a';
     }
   });
 
+  function sendKeyConfig() {
+    window.auto.updateKeyConfig({
+      key: keySelect.value,
+      interval: parseInt(keyIntervalInput.value, 10)
+    });
+  }
+  [keySelect, keyIntervalInput].forEach(el => {
+    el.addEventListener('change', sendKeyConfig);
+  });
+
 const toggleKeyBtn = document.getElementById('toggleKey');
 toggleKeyBtn.addEventListener('click', () => {
   const running = toggleKeyBtn.classList.contains('running');
   if (running) {
     window.auto.stopKeyPresser();
   } else {
-    const key = document.getElementById('key').value;
-    const interval = parseInt(document.getElementById('keyInterval').value, 10);
+    const key = keySelect.value;
+    const interval = parseInt(keyIntervalInput.value, 10);
     window.auto.startKeyPresser(key, interval);
   }
 });
@@ -158,7 +167,8 @@ keyHotkeyBtn.addEventListener('click', () => captureHotkey(keyHotkeyBtn, window.
 window.auto.getHotkeys().then(({ clickHotkey, keyHotkey }) => {
   if (clickHotkey) clickHotkeyBtn.textContent = clickHotkey;
   if (keyHotkey) keyHotkeyBtn.textContent = keyHotkey;
-  resizeToContent();
 });
 
 sendClickConfig();
+sendKeyConfig();
+resizeToContent();

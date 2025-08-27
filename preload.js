@@ -13,6 +13,7 @@ contextBridge.exposeInMainWorld('auto', {
     onClickerToggled: (callback) => ipcRenderer.on('clicker-toggled', (_, state) => callback(state)),
     onKeyToggled: (callback) => ipcRenderer.on('key-toggled', (_, state) => callback(state)),
     pickPoint: () => ipcRenderer.invoke('pick-point'),
-    resize: (height) => ipcRenderer.invoke('resize', height),
-    updateClickConfig: (config) => ipcRenderer.send('update-click-config', config)
+    updateClickConfig: (config) => ipcRenderer.send('update-click-config', config),
+    updateKeyConfig: (config) => ipcRenderer.send('update-key-config', config),
+    resizeWindow: (height) => ipcRenderer.send('resize-window', height)
   });

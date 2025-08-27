@@ -4,6 +4,8 @@ const fs = require('fs');
 const { MicaBrowserWindow } = require('mica-electron');
 let robot;
 let win;
+let pickerWin;
+let isQuitting = false;
 
 // Disable GPU acceleration by default to avoid crashes on some systems.
 // Set AUTOMANCER_ENABLE_GPU=1 to opt in to hardware acceleration.
@@ -123,6 +125,13 @@ function updateClickConfig(config) {
   }
 }
 
+function updateKeyConfig(config) {
+  if (config) {
+    if (typeof config.key === 'string') currentKey = config.key;
+    if (Number.isFinite(config.interval)) keyInterval = config.interval;
+  }
+}
+
 function getClickState() {
   return {
     interval: clickInterval,
@@ -157,50 +166,68 @@ function toggleKeyPresser() {
   }
 }
 
-function pickPoint() {
-  return new Promise((resolve) => {
-    const displays = screen.getAllDisplays();
-    let minX = Infinity;
-    let minY = Infinity;
-    let maxX = -Infinity;
-    let maxY = -Infinity;
-    for (const d of displays) {
-      const b = d.bounds;
-      minX = Math.min(minX, b.x);
-      minY = Math.min(minY, b.y);
-      maxX = Math.max(maxX, b.x + b.width);
-      maxY = Math.max(maxY, b.y + b.height);
+function createPickerWindow() {
+  if (pickerWin && !pickerWin.isDestroyed()) return;
+  pickerWin = new BrowserWindow({
+    show: false,
+    transparent: true,
+    frame: false,
+    alwaysOnTop: true,
+    skipTaskbar: true,
+    backgroundColor: '#00000000',
+    hasShadow: false,
+    acceptFirstMouse: true,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false
     }
-    const picker = new BrowserWindow({
-      x: minX,
-      y: minY,
-      width: maxX - minX,
-      height: maxY - minY,
-      transparent: true,
-      frame: false,
-      show: false,
-      alwaysOnTop: true,
-      skipTaskbar: true,
-      backgroundColor: '#00000000',
-      hasShadow: false,
-      webPreferences: {
-        nodeIntegration: true,
-        contextIsolation: false
-      }
-    });
-    picker.loadFile(path.join(__dirname, 'picker.html'), {
-      query: { offsetX: minX, offsetY: minY }
-    });
-    picker.once('ready-to-show', () => picker.show());
+  });
+  pickerWin.loadFile(path.join(__dirname, 'picker.html'));
+  pickerWin.on('closed', () => {
+    pickerWin = null;
+    // Preload a fresh picker for next use to avoid load delays
+    if (!isQuitting) {
+      createPickerWindow();
+    }
+  });
+}
 
+async function pickPoint() {
+  createPickerWindow();
+  if (pickerWin.webContents.isLoading()) {
+    await new Promise(resolve => pickerWin.webContents.once('did-finish-load', resolve));
+  }
+  const displays = screen.getAllDisplays();
+  let minX = Infinity;
+  let minY = Infinity;
+  let maxX = -Infinity;
+  let maxY = -Infinity;
+  for (const d of displays) {
+    const b = d.bounds;
+    minX = Math.min(minX, b.x);
+    minY = Math.min(minY, b.y);
+    maxX = Math.max(maxX, b.x + b.width);
+    maxY = Math.max(maxY, b.y + b.height);
+  }
+  pickerWin.setBounds({
+    x: minX,
+    y: minY,
+    width: maxX - minX,
+    height: maxY - minY
+  });
+  pickerWin.show();
+  pickerWin.focus();
+
+  return new Promise((resolve) => {
     const finish = () => {
       const pos = screen.getCursorScreenPoint();
       resolve(pos);
-      picker.close();
+      pickerWin.hide();
+      pickerWin.close();
     };
 
     ipcMain.once('picker-done', finish);
-    picker.on('closed', () => {
+    pickerWin.once('closed', () => {
       ipcMain.removeListener('picker-done', finish);
     });
   });
@@ -246,17 +273,19 @@ function createWindow() {
   }
   const WindowClass = isWin ? MicaBrowserWindow : BrowserWindow;
   const windowOpts = {
-    width: 640,
+    width: 360,
     height: 360,
+    resizable: false,
     icon,
+    frame: false,
+    transparent: true,
+    backgroundColor: '#00000000',
     titleBarStyle: 'hidden',
     titleBarOverlay: { color: '#00000000', symbolColor: '#ffffff' },
     autoHideMenuBar: true,
     show: false,
     alwaysOnTop: true,
-    ...(isWin
-      ? { frame: false, transparent: true, roundedCorners: true, backgroundColor: '#00000000' }
-      : { backgroundColor: '#01000000' }),
+    ...(isWin ? { roundedCorners: true } : {}),
     ...(isMac ? { vibrancy: 'under-window', visualEffectState: 'active' } : {}),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
@@ -268,6 +297,9 @@ function createWindow() {
   if (typeof win.setIcon === 'function') {
     win.setIcon(icon);
   }
+  if (typeof win.setRoundedCorners === 'function') {
+    win.setRoundedCorners(true);
+  }
 
   win.loadFile(path.join(__dirname, 'index.html'));
   win.once('ready-to-show', () => {
@@ -276,7 +308,7 @@ function createWindow() {
       win.setMicaEffect();
     }
     win.show();
-    if (isWin && typeof win.setRoundedCorners === 'function') {
+    if (typeof win.setRoundedCorners === 'function') {
       win.setRoundedCorners(true);
     }
     // --- Force a tiny resize to trigger Mica ---
@@ -285,6 +317,12 @@ function createWindow() {
       win.setSize(w, h + 1);
       setTimeout(() => win.setSize(w, h), 10);
     }, 100);
+  });
+  win.on('close', () => {
+    isQuitting = true;
+    if (pickerWin && !pickerWin.isDestroyed()) {
+      pickerWin.destroy();
+    }
   });
   win.on('closed', () => {
     win = null;
@@ -315,7 +353,12 @@ async function checkForUpdates() {
       }
     });
     if (!res.ok) return;
-    const releases = await res.json();
+    let releases;
+    try {
+      releases = await res.json();
+    } catch {
+      return;
+    }
     const latestRelease = releases[0];
     if (!latestRelease || !latestRelease.tag_name) return;
     const latest = latestRelease.tag_name.replace(/^v/, '');
@@ -348,6 +391,7 @@ if (process.env.NODE_ENV !== 'test') {
     settingsPath = path.join(app.getPath('userData'), 'settings.json');
     loadSettings();
     createWindow();
+    createPickerWindow();
     checkForUpdates();
   });
 
@@ -355,6 +399,12 @@ if (process.env.NODE_ENV !== 'test') {
     globalShortcut.unregisterAll();
     stopClicker();
     stopKeyPresser();
+  });
+  app.on('before-quit', () => {
+    isQuitting = true;
+  });
+  app.on('window-all-closed', () => {
+    app.quit();
   });
 }
 
@@ -366,23 +416,18 @@ if (process.env.NODE_ENV !== 'test') {
   ipcMain.on('set-key-hotkey', (e, accelerator) => registerKeyHotkey(accelerator));
   ipcMain.handle('get-hotkeys', () => ({ clickHotkey, keyHotkey }));
   ipcMain.handle('pick-point', () => pickPoint());
-  // ipcMain.on('resize-window', (e, height) => {
-  //   if (win && !win.isDestroyed()) {
-  //     const [w] = win.getContentSize();
-  //     win.setContentSize(w, Math.round(height));
-  //   }
-  // });
-
   ipcMain.on('update-click-config', (e, config) => {
     updateClickConfig(config);
   });
-ipcMain.handle('resize', (event, height) => {
-  const win = BrowserWindow.fromWebContents(event.sender);
-  if (win) {
-    const [width] = win.getContentSize();
-    win.setContentSize(width, Math.round(height) + 8);
-  }
-});
+  ipcMain.on('update-key-config', (e, config) => {
+    updateKeyConfig(config);
+  });
+  ipcMain.on('resize-window', (e, height) => {
+    if (win) {
+      const [w] = win.getContentSize();
+      win.setContentSize(w, Math.round(height));
+    }
+  });
 
 module.exports = {
   startClicker,
@@ -390,6 +435,7 @@ module.exports = {
   startKeyPresser,
   stopKeyPresser,
   updateClickConfig,
+  updateKeyConfig,
   getClickState,
   getKeyState
 };
