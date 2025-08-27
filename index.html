@@ -23,10 +23,10 @@
       user-select: none;
     }
 
-      html.win32, body.win32 {
-        border-radius: 12px;
-        overflow: hidden;
-      }
+    html, body {
+      border-radius: 12px;
+      overflow: hidden;
+    }
     header {
       height: 32px;
       padding: 0 12px;
@@ -63,8 +63,12 @@
       border-radius: 0;
     }
     .tab.active {
-      border-bottom-color: var(--accent);
-      color: var(--accent);
+      border-bottom: 2px solid transparent;
+      border-image: linear-gradient(to bottom right, #D33818, #8c5cf3) 1;
+      background: linear-gradient(to bottom right, #D33818, #8c5cf3);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
     }
     .card {
       backdrop-filter: blur(20px);

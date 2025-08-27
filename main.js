@@ -5,6 +5,7 @@ const { MicaBrowserWindow } = require('mica-electron');
 let robot;
 let win;
 let pickerWin;
+let isQuitting = false;
 
 // Disable GPU acceleration by default to avoid crashes on some systems.
 // Set AUTOMANCER_ENABLE_GPU=1 to opt in to hardware acceleration.
@@ -177,6 +178,10 @@ function createPickerWindow() {
   pickerWin.loadFile(path.join(__dirname, 'picker.html'));
   pickerWin.on('closed', () => {
     pickerWin = null;
+    // Preload a fresh picker for next use to avoid load delays
+    if (!isQuitting) {
+      createPickerWindow();
+    }
   });
 }
 
@@ -211,6 +216,7 @@ async function pickPoint() {
       const pos = screen.getCursorScreenPoint();
       resolve(pos);
       pickerWin.hide();
+      pickerWin.close();
     };
 
     ipcMain.once('picker-done', finish);
@@ -371,6 +377,9 @@ if (process.env.NODE_ENV !== 'test') {
     globalShortcut.unregisterAll();
     stopClicker();
     stopKeyPresser();
+  });
+  app.on('before-quit', () => {
+    isQuitting = true;
   });
 }
 
