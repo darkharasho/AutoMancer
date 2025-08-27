@@ -278,6 +278,7 @@ function createWindow() {
     resizable: false,
     icon,
     frame: false,
+    thickFrame: false,
     transparent: true,
     backgroundColor: '#00000000',
     titleBarStyle: 'hidden',
@@ -286,7 +287,7 @@ function createWindow() {
     show: false,
     alwaysOnTop: true,
     ...(isWin ? { roundedCorners: true } : {}),
-    ...(isMac ? { vibrancy: 'under-window', visualEffectState: 'active' } : {}),
+    ...(isMac ? { roundedCorners: false, vibrancy: 'under-window', visualEffectState: 'active' } : {}),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
