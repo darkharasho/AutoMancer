@@ -290,6 +290,9 @@ function createWindow() {
   if (typeof win.setIcon === 'function') {
     win.setIcon(icon);
   }
+  if (typeof win.setRoundedCorners === 'function') {
+    win.setRoundedCorners(true);
+  }
 
   win.loadFile(path.join(__dirname, 'index.html'));
   win.once('ready-to-show', () => {
@@ -298,7 +301,7 @@ function createWindow() {
       win.setMicaEffect();
     }
     win.show();
-    if (isWin && typeof win.setRoundedCorners === 'function') {
+    if (typeof win.setRoundedCorners === 'function') {
       win.setRoundedCorners(true);
     }
     // --- Force a tiny resize to trigger Mica ---
