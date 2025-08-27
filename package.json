@@ -14,14 +14,14 @@
     "test": "node --test"
   },
   "dependencies": {
-    "mica-electron": "^1.5.16",
-    "@jitsi/robotjs": "^0.6.17"
+    "@jitsi/robotjs": "^0.6.17",
+    "mica-electron": "^1.5.16"
   },
   "devDependencies": {
-    "electron-builder": "^24.9.1",
+    "cross-env": "^7.0.3",
     "electron": "^37.2.6",
-    "electron-packager": "^17.1.1",
-    "cross-env": "^7.0.3"
+    "electron-builder": "^24.9.1",
+    "electron-packager": "^17.1.1"
   },
   "engines": {
     "node": ">=18 <19",
@@ -47,5 +47,8 @@
       "uninstallDisplayName": "Uninstall AutoMancer",
       "deleteAppDataOnUninstall": true
     }
+  },
+  "optionalDependencies": {
+    "electron-liquid-glass": "^1.0.1"
   }
 }

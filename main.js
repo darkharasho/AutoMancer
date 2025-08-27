@@ -2,6 +2,7 @@ const { app, ipcMain, globalShortcut, BrowserWindow, screen, nativeImage, shell,
 const path = require('path');
 const fs = require('fs');
 const { MicaBrowserWindow } = require('mica-electron');
+const liquidGlass = process.platform === 'darwin' ? require('electron-liquid-glass') : null;
 let robot;
 let win;
 let pickerWin;
@@ -286,7 +287,6 @@ function createWindow() {
     show: false,
     alwaysOnTop: true,
     ...(isWin ? { roundedCorners: true } : {}),
-    ...(isMac ? { vibrancy: 'under-window', visualEffectState: 'active' } : {}),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
@@ -302,21 +302,32 @@ function createWindow() {
   }
 
   win.loadFile(path.join(__dirname, 'index.html'));
+  if (isMac && liquidGlass) {
+    win.webContents.once('did-finish-load', () => {
+      liquidGlass.addView(win.getNativeWindowHandle(), { cornerRadius: 16 });
+      if (typeof win.setWindowButtonVisibility === 'function') {
+        win.setWindowButtonVisibility(true);
+      }
+    });
+  }
   win.once('ready-to-show', () => {
     if (isWin) {
       win.setDarkTheme();
       win.setMicaEffect();
+      if (typeof win.setRoundedCorners === 'function') {
+        win.setRoundedCorners(true);
+      }
+      // --- Force a tiny resize to trigger Mica ---
+      setTimeout(() => {
+        const [w, h] = win.getSize();
+        win.setSize(w, h + 1);
+        setTimeout(() => win.setSize(w, h), 10);
+      }, 100);
     }
     win.show();
-    if (typeof win.setRoundedCorners === 'function') {
+    if (!isWin && typeof win.setRoundedCorners === 'function') {
       win.setRoundedCorners(true);
     }
-    // --- Force a tiny resize to trigger Mica ---
-    setTimeout(() => {
-      const [w, h] = win.getSize();
-      win.setSize(w, h + 1);
-      setTimeout(() => win.setSize(w, h), 10);
-    }, 100);
   });
   win.on('close', () => {
     isQuitting = true;
