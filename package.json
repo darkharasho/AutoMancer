@@ -15,7 +15,8 @@
   },
   "dependencies": {
     "mica-electron": "^1.5.16",
-    "@jitsi/robotjs": "^0.6.17"
+    "@jitsi/robotjs": "^0.6.17",
+    "mathjs": "^11.11.0"
   },
   "devDependencies": {
     "electron-builder": "^24.9.1",

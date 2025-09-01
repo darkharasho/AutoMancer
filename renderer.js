@@ -1,3 +1,46 @@
+const math = (() => {
+  try {
+    return require('mathjs');
+  } catch {
+    return null;
+  }
+})();
+
+function replaceUnitTokens(str) {
+  if (!str) return '';
+  return str.replace(/\b(\d+(?:\.\d+)?)([a-zA-Z]+)\b/g, (match, num, unit) => {
+    const map = { F: 'degF', C: 'degC' };
+    const u = map[unit] || unit;
+    return `unit(${num}, '${u}')`;
+  });
+}
+
+function highlight(input) {
+  if (!input) return '';
+  const escaped = input
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+  return escaped.replace(/(\d+(?:\.\d+)?)([a-zA-Z]+)/g, (m, num, unit) => {
+    return `${num}<span class="unit">${unit}</span>`;
+  });
+}
+
+function compute(expr) {
+  if (!math) throw new Error('math.js not loaded');
+  const replaced = replaceUnitTokens(expr);
+  const result = math.evaluate(replaced);
+  if (result && typeof result === 'object' && result.isUnit) {
+    return result.toString();
+  }
+  return typeof result === 'number' ? String(result) : result.toString();
+}
+
+if (typeof module !== 'undefined') {
+  module.exports = { replaceUnitTokens, highlight, compute };
+}
+
+if (typeof document !== 'undefined') {
 const keySelect = document.getElementById('keySelect');
 const keyIntervalInput = document.getElementById('keyInterval');
 const header = document.querySelector('header');
@@ -172,3 +215,4 @@ window.auto.getHotkeys().then(({ clickHotkey, keyHotkey }) => {
 sendClickConfig();
 sendKeyConfig();
 resizeToContent();
+}
