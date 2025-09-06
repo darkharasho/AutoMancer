@@ -180,8 +180,14 @@ function createPickerWindow() {
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false
-    }
+    } 
   });
+  if (typeof pickerWin.setAlwaysOnTop === 'function') {
+    pickerWin.setAlwaysOnTop(true, 'screen-saver');
+  }
+  if (typeof pickerWin.setVisibleOnAllWorkspaces === 'function') {
+    pickerWin.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
+  }
   pickerWin.loadFile(path.join(__dirname, 'picker.html'));
   pickerWin.on('closed', () => {
     pickerWin = null;
@@ -290,10 +296,16 @@ function createWindow() {
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
-      nodeIntegration: false
+    nodeIntegration: false
     }
   };
   win = new WindowClass(windowOpts);
+  if (typeof win.setAlwaysOnTop === 'function') {
+    win.setAlwaysOnTop(true, 'screen-saver');
+  }
+  if (typeof win.setVisibleOnAllWorkspaces === 'function') {
+    win.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
+  }
   if (typeof win.setIcon === 'function') {
     win.setIcon(icon);
   }
