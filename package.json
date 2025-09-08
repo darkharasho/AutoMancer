@@ -41,7 +41,7 @@
     },
     "win": {
       "target": "nsis",
-      "icon": "images/AutoMancer.ico"
+      "icon": "images/AutoMancer_v2.png"
     },
     "nsis": {
       "uninstallDisplayName": "Uninstall AutoMancer",
