@@ -265,7 +265,7 @@ function createWindow() {
   const iconPath = path.join(
     __dirname,
     'images',
-    isMac ? 'AutoMancer.icns' : isWin ? 'AutoMancer.ico' : 'AutoMancer.png'
+    isMac ? 'AutoMancer.icns' : isWin ? 'AutoMancer_v2.png' : 'AutoMancer_v2.png'
   );
   const icon = nativeImage.createFromPath(iconPath);
   if (isMac) {
@@ -365,7 +365,7 @@ async function checkForUpdates() {
     const current = app.getVersion();
     if (compareVersions(latest, current) > 0 && dialog) {
       const icon = nativeImage.createFromPath(
-        path.join(__dirname, 'images', 'AutoMancer.png')
+        path.join(__dirname, 'images', 'AutoMancer_v2.png')
       );
       const { response } = await dialog.showMessageBox(win || null, {
         type: 'info',
