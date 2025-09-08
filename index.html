@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>AutoMancer</title>
-  <link rel="icon" type="image/png" href="images/AutoMancer.png" />
+  <link rel="icon" type="image/x-icon" href="images/AutoMancer.ico" />
   <style>
     :root {
       color-scheme: dark;
@@ -12,6 +12,28 @@
       --hover: rgba(255, 255, 255, 0.12);
       --accent: #2563eb;
       --field-width: 100px;
+    }
+
+    /* Kurzgesagt-inspired theme */
+    body.kurzgesagt {
+      --bg: rgba(13, 32, 56, 0.85);
+      --border: rgba(255, 255, 255, 0.2);
+      --hover: rgba(255, 255, 255, 0.18);
+      --accent: #ffb600;
+      background: radial-gradient(circle at 50% 0%, #244c66, #0d2038);
+    }
+
+    body.kurzgesagt .tab.active {
+      border-image: linear-gradient(to bottom right, #ffb600, #00bcd4) 1;
+      background: linear-gradient(to bottom right, #ffb600, #00bcd4);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    body.kurzgesagt .card,
+    body.kurzgesagt .actions button {
+      border-image: linear-gradient(to bottom right, #ffb600, #00bcd4) 1;
     }
     body {
       margin: 0;
@@ -248,7 +270,7 @@
     }
   </style>
 </head>
-<body>
+<body class="kurzgesagt">
   <header><img src="images/AutoMancer.png" alt="AutoMancer logo" />AutoMancer</header>
   <main>
     <div class="tabs" role="tablist">
