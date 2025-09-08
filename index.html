@@ -45,10 +45,20 @@
       align-items: center;
       -webkit-app-region: drag;
       font-weight: 500;
+      position: relative;
     }
     header img {
       height: 20px;
       margin-right: 8px;
+    }
+    .window-controls {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 120px;
+      height: 100%;
+      -webkit-app-region: no-drag;
+      pointer-events: none;
     }
     main {
       padding: 16px 24px 24px;
@@ -249,7 +259,7 @@
   </style>
 </head>
 <body>
-  <header><img src="images/AutoMancer.png" alt="AutoMancer logo" />AutoMancer</header>
+  <header><img src="images/AutoMancer.png" alt="AutoMancer logo" />AutoMancer<div class="window-controls"></div></header>
   <main>
     <div class="tabs" role="tablist">
       <button class="tab active" data-tab="clicker" role="tab">Auto Clicker</button>
